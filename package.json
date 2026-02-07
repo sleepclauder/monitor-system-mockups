@@ -1,0 +1,32 @@
+{
+  "name": "monitor-system-mockups",
+  "version": "1.0.0",
+  "description": "Интерактивные HTML мокапы системы мониторинга IT-инфраструктуры",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8000 -o",
+    "serve": "npx http-server pages -p 8000",
+    "dev": "npx browser-sync start --server --files 'pages/*.html' --startPath '/pages/dashboard.html'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/monitor-system-mockups.git"
+  },
+  "keywords": [
+    "monitoring",
+    "dashboard",
+    "mockup",
+    "ui",
+    "dark-theme",
+    "html",
+    "css"
+  ],
+  "author": "Your Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/monitor-system-mockups/issues"
+  },
+  "homepage": "https://github.com/yourusername/monitor-system-mockups#readme",
+  "devDependencies": {},
+  "dependencies": {}
+}

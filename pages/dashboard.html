@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Система Мониторинга</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2332;
+            --accent-primary: #00ff88;
+            --accent-secondary: #00ccff;
+            --accent-warning: #ffaa00;
+            --accent-danger: #ff3366;
+            --text-primary: #e4e8f0;
+            --text-secondary: #8b94a8;
+            --border-color: #1f2937;
+            --glow: rgba(0, 255, 136, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 204, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 32px 0;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 32px 40px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 32px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--accent-primary);
+            background: rgba(0, 255, 136, 0.05);
+            border-left-color: var(--accent-primary);
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            opacity: 0.7;
+        }
+
+        .nav-link.active .nav-icon {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: #0a0e1a;
+        }
+
+        .btn-primary:hover {
+            background: #00ff99;
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.success {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .stat-icon.warning {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--accent-warning);
+        }
+
+        .stat-icon.danger {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--accent-danger);
+        }
+
+        .stat-icon.info {
+            background: rgba(0, 204, 255, 0.1);
+            color: var(--accent-secondary);
+        }
+
+        .stat-trend {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .stat-trend.up {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .stat-trend.down {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--accent-danger);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-tab {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+
+        .chart-tab.active {
+            background: var(--bg-tertiary);
+            color: var(--accent-primary);
+        }
+
+        .chart-placeholder {
+            height: 280px;
+            background: linear-gradient(180deg, rgba(0, 255, 136, 0.05) 0%, transparent 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            border: 1px dashed var(--border-color);
+        }
+
+        /* System Status */
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .status-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.online {
+            background: var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .status-indicator.warning {
+            background: var(--accent-warning);
+            box-shadow: 0 0 10px var(--accent-warning);
+        }
+
+        .status-indicator.offline {
+            background: var(--accent-danger);
+            box-shadow: 0 0 10px var(--accent-danger);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Activity Table */
+        .activity-section {
+            margin-top: 32px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .table-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg-tertiary);
+        }
+
+        th {
+            padding: 16px 24px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge.success {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .badge.error {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--accent-danger);
+        }
+
+        .badge.warning {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--accent-warning);
+        }
+
+        .timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card {
+            animation: fadeIn 0.5s ease backwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .chart-card {
+            animation: fadeIn 0.6s ease backwards;
+            animation-delay: 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>MONITOR//SYS</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link active">
+                            <span class="nav-icon">📊</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="objects.html" class="nav-link">
+                            <span class="nav-icon">🖥️</span>
+                            Объекты мониторинга
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="object-detail.html" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            Детали объекта
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="alerts.html" class="nav-link">
+                            <span class="nav-icon">🔔</span>
+                            Алерты и уведомления
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            Отчеты и графики
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <div class="header-title">
+                    <h2>Общий обзор системы</h2>
+                    <p class="header-subtitle">Мониторинг инфраструктуры в реальном времени</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">Экспорт данных</button>
+                    <button class="btn btn-primary">Обновить</button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon success">✓</div>
+                        <span class="stat-trend up">+2.3%</span>
+                    </div>
+                    <div class="stat-value">127</div>
+                    <div class="stat-label">Активные серверы</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon warning">⚠</div>
+                        <span class="stat-trend up">+5</span>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Предупреждения</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon danger">✕</div>
+                        <span class="stat-trend down">-2</span>
+                    </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Критические ошибки</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon info">↗</div>
+                        <span class="stat-trend up">+15%</span>
+                    </div>
+                    <div class="stat-value">89%</div>
+                    <div class="stat-label">Среднее время работы</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Производительность CPU</h3>
+                        <div class="chart-tabs">
+                            <span class="chart-tab active">1H</span>
+                            <span class="chart-tab">24H</span>
+                            <span class="chart-tab">7D</span>
+                            <span class="chart-tab">30D</span>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        [GRAPH: CPU Performance Over Time]
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Статус систем</h3>
+                    </div>
+                    <div class="status-list">
+                        <div class="status-item">
+                            <div class="status-left">
+                                <span class="status-indicator online"></span>
+                                <span class="status-name">Web Servers</span>
+                            </div>
+                            <span class="status-value">24/24</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-left">
+                                <span class="status-indicator online"></span>
+                                <span class="status-name">Database Cluster</span>
+                            </div>
+                            <span class="status-value">8/8</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-left">
+                                <span class="status-indicator warning"></span>
+                                <span class="status-name">Cache Layer</span>
+                            </div>
+                            <span class="status-value">5/6</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-left">
+                                <span class="status-indicator online"></span>
+                                <span class="status-name">Load Balancers</span>
+                            </div>
+                            <span class="status-value">4/4</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-left">
+                                <span class="status-indicator offline"></span>
+                                <span class="status-name">Backup System</span>
+                            </div>
+                            <span class="status-value">2/3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-section">
+                <div class="section-header">
+                    <h3 class="section-title">Последняя активность</h3>
+                    <button class="btn btn-secondary">Показать все</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Событие</th>
+                                <th>Сервер</th>
+                                <th>Статус</th>
+                                <th>Время</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>High CPU usage detected</td>
+                                <td>prod-web-01.example.com</td>
+                                <td><span class="badge warning">Warning</span></td>
+                                <td><span class="timestamp">2026-02-07 14:23:15</span></td>
+                            </tr>
+                            <tr>
+                                <td>Backup completed successfully</td>
+                                <td>backup-server-03.example.com</td>
+                                <td><span class="badge success">Success</span></td>
+                                <td><span class="timestamp">2026-02-07 14:15:42</span></td>
+                            </tr>
+                            <tr>
+                                <td>Database connection timeout</td>
+                                <td>prod-db-02.example.com</td>
+                                <td><span class="badge error">Error</span></td>
+                                <td><span class="timestamp">2026-02-07 14:08:31</span></td>
+                            </tr>
+                            <tr>
+                                <td>SSL certificate renewed</td>
+                                <td>lb-01.example.com</td>
+                                <td><span class="badge success">Success</span></td>
+                                <td><span class="timestamp">2026-02-07 13:55:18</span></td>
+                            </tr>
+                            <tr>
+                                <td>Memory usage above threshold</td>
+                                <td>app-server-12.example.com</td>
+                                <td><span class="badge warning">Warning</span></td>
+                                <td><span class="timestamp">2026-02-07 13:42:07</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

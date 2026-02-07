@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчеты и графики - Система Мониторинга</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2332;
+            --accent-primary: #00ff88;
+            --accent-secondary: #00ccff;
+            --accent-warning: #ffaa00;
+            --accent-danger: #ff3366;
+            --text-primary: #e4e8f0;
+            --text-secondary: #8b94a8;
+            --border-color: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 204, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 32px 0;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 32px 40px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 32px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--accent-primary);
+            background: rgba(0, 255, 136, 0.05);
+            border-left-color: var(--accent-primary);
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            opacity: 0.7;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .header-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: #0a0e1a;
+        }
+
+        .btn-primary:hover {
+            background: #00ff99;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Report Controls */
+        .report-controls {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-input,
+        .control-select {
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .control-input:focus,
+        .control-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .control-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.1);
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chart-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-tab {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+
+        .chart-tab.active {
+            background: var(--bg-tertiary);
+            color: var(--accent-primary);
+        }
+
+        .chart-placeholder {
+            height: 320px;
+            background: linear-gradient(180deg, rgba(0, 255, 136, 0.05) 0%, transparent 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            border: 1px dashed var(--border-color);
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .summary-stat {
+            flex: 1;
+            text-align: center;
+        }
+
+        .summary-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 4px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Performance Table */
+        .performance-table {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg-tertiary);
+        }
+
+        th {
+            padding: 16px 24px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .server-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+        }
+
+        .metric-bar-cell {
+            width: 200px;
+        }
+
+        .metric-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .metric-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .metric-fill.good {
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .metric-fill.warning {
+            background: linear-gradient(90deg, var(--accent-warning), #ffcc00);
+        }
+
+        .metric-fill.danger {
+            background: linear-gradient(90deg, var(--accent-danger), #ff6688);
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            min-width: 45px;
+        }
+
+        .trend-indicator {
+            font-size: 12px;
+        }
+
+        .trend-indicator.up {
+            color: var(--accent-primary);
+        }
+
+        .trend-indicator.down {
+            color: var(--accent-danger);
+        }
+
+        /* Report Templates */
+        .templates-section {
+            margin-top: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .template-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.1);
+        }
+
+        .template-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: rgba(0, 255, 136, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+
+        .template-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .template-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chart-card {
+            animation: fadeIn 0.5s ease backwards;
+        }
+
+        .chart-card:nth-child(1) { animation-delay: 0.05s; }
+        .chart-card:nth-child(2) { animation-delay: 0.1s; }
+        .chart-card:nth-child(3) { animation-delay: 0.15s; }
+        .chart-card:nth-child(4) { animation-delay: 0.2s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>MONITOR//SYS</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="objects.html" class="nav-link">
+                            <span class="nav-icon">🖥️</span>
+                            Объекты мониторинга
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="object-detail.html" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            Детали объекта
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="alerts.html" class="nav-link">
+                            <span class="nav-icon">🔔</span>
+                            Алерты и уведомления
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link active">
+                            <span class="nav-icon">📈</span>
+                            Отчеты и графики
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div class="header-title">
+                    <h2>Отчеты и графики</h2>
+                    <p class="header-subtitle">Анализ производительности и статистика</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">Экспорт PDF</button>
+                    <button class="btn btn-primary">Создать отчет</button>
+                </div>
+            </div>
+
+            <!-- Report Controls -->
+            <div class="report-controls">
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label class="control-label">Период</label>
+                        <select class="control-select">
+                            <option>Последние 24 часа</option>
+                            <option>Последние 7 дней</option>
+                            <option selected>Последние 30 дней</option>
+                            <option>Кастомный период</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Группа серверов</label>
+                        <select class="control-select">
+                            <option>Все серверы</option>
+                            <option>Production</option>
+                            <option>Staging</option>
+                            <option>Development</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Тип метрик</label>
+                        <select class="control-select">
+                            <option>Все метрики</option>
+                            <option>CPU & Memory</option>
+                            <option>Network</option>
+                            <option>Disk I/O</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Агрегация</label>
+                        <select class="control-select">
+                            <option>Среднее</option>
+                            <option>Максимум</option>
+                            <option>Минимум</option>
+                            <option>95-й перцентиль</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-actions">
+                    <button class="btn btn-secondary">Сбросить</button>
+                    <button class="btn btn-primary">Применить</button>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="stats-summary">
+                <div class="summary-stat">
+                    <div class="summary-value">94.2%</div>
+                    <div class="summary-label">Среднее Uptime</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-value">52.3%</div>
+                    <div class="summary-label">Средний CPU</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-value">3.8TB</div>
+                    <div class="summary-label">Трафик</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-value">127ms</div>
+                    <div class="summary-label">Avg Response Time</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Производительность системы</h3>
+                            <p class="chart-subtitle">CPU, Memory, Network за последние 30 дней</p>
+                        </div>
+                        <div class="chart-tabs">
+                            <span class="chart-tab active">CPU</span>
+                            <span class="chart-tab">Memory</span>
+                            <span class="chart-tab">Network</span>
+                            <span class="chart-tab">Disk</span>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        [GRAPH: System Performance Trends - Multi-line chart showing CPU, Memory, Network over 30 days]
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Распределение нагрузки</h3>
+                            <p class="chart-subtitle">По серверам</p>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        [GRAPH: Load Distribution - Bar chart showing load across different servers]
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Статус серверов</h3>
+                            <p class="chart-subtitle">Доступность</p>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        [GRAPH: Server Status - Pie chart showing online/warning/offline distribution]
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Время отклика</h3>
+                            <p class="chart-subtitle">По эндпоинтам</p>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        [GRAPH: Response Time - Line chart showing response times for different endpoints]
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h3 class="chart-title">Использование диска</h3>
+                            <p class="chart-subtitle">Рост за месяц</p>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        [GRAPH: Disk Usage Growth - Area chart showing disk usage trends]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Table -->
+            <div class="performance-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Сервер</th>
+                            <th>CPU (Avg)</th>
+                            <th>Memory (Avg)</th>
+                            <th>Network I/O</th>
+                            <th>Uptime</th>
+                            <th>Тренд</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="server-name">prod-web-01</td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill good" style="width: 45%"></div>
+                                    </div>
+                                    <span class="metric-value">45%</span>
+                                </div>
+                            </td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill good" style="width: 62%"></div>
+                                    </div>
+                                    <span class="metric-value">62%</span>
+                                </div>
+                            </td>
+                            <td>124 Mb/s</td>
+                            <td>99.8%</td>
+                            <td><span class="trend-indicator up">↗ +2.3%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="server-name">prod-db-01</td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill warning" style="width: 78%"></div>
+                                    </div>
+                                    <span class="metric-value">78%</span>
+                                </div>
+                            </td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill warning" style="width: 89%"></div>
+                                    </div>
+                                    <span class="metric-value">89%</span>
+                                </div>
+                            </td>
+                            <td>89 Mb/s</td>
+                            <td>98.2%</td>
+                            <td><span class="trend-indicator up">↗ +5.1%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="server-name">api-gateway-01</td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill good" style="width: 52%"></div>
+                                    </div>
+                                    <span class="metric-value">52%</span>
+                                </div>
+                            </td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill good" style="width: 48%"></div>
+                                    </div>
+                                    <span class="metric-value">48%</span>
+                                </div>
+                            </td>
+                            <td>256 Mb/s</td>
+                            <td>99.9%</td>
+                            <td><span class="trend-indicator down">↘ -1.2%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="server-name">cache-01</td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill good" style="width: 28%"></div>
+                                    </div>
+                                    <span class="metric-value">28%</span>
+                                </div>
+                            </td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill warning" style="width: 76%"></div>
+                                    </div>
+                                    <span class="metric-value">76%</span>
+                                </div>
+                            </td>
+                            <td>45 Mb/s</td>
+                            <td>99.5%</td>
+                            <td><span class="trend-indicator up">↗ +3.8%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="server-name">lb-01</td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill good" style="width: 34%"></div>
+                                    </div>
+                                    <span class="metric-value">34%</span>
+                                </div>
+                            </td>
+                            <td class="metric-bar-cell">
+                                <div class="metric-bar-container">
+                                    <div class="metric-bar">
+                                        <div class="metric-fill good" style="width: 41%"></div>
+                                    </div>
+                                    <span class="metric-value">41%</span>
+                                </div>
+                            </td>
+                            <td>2.1 Gb/s</td>
+                            <td>100%</td>
+                            <td><span class="trend-indicator down">↘ -0.5%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Report Templates -->
+            <div class="templates-section">
+                <h3 class="section-title">Шаблоны отчетов</h3>
+                <div class="templates-grid">
+                    <div class="template-card">
+                        <div class="template-icon">📊</div>
+                        <h4 class="template-title">Еженедельный отчет</h4>
+                        <p class="template-description">
+                            Сводка производительности и доступности за последнюю неделю
+                        </p>
+                    </div>
+                    <div class="template-card">
+                        <div class="template-icon">📈</div>
+                        <h4 class="template-title">Месячный отчет</h4>
+                        <p class="template-description">
+                            Детальный анализ трендов и статистики за месяц
+                        </p>
+                    </div>
+                    <div class="template-card">
+                        <div class="template-icon">🎯</div>
+                        <h4 class="template-title">SLA отчет</h4>
+                        <p class="template-description">
+                            Отчет по выполнению SLA соглашений и доступности
+                        </p>
+                    </div>
+                    <div class="template-card">
+                        <div class="template-icon">⚡</div>
+                        <h4 class="template-title">Отчет по инцидентам</h4>
+                        <p class="template-description">
+                            Анализ всех инцидентов и времени их разрешения
+                        </p>
+                    </div>
+                    <div class="template-card">
+                        <div class="template-icon">💰</div>
+                        <h4 class="template-title">Capacity Planning</h4>
+                        <p class="template-description">
+                            Прогноз нагрузки и рекомендации по масштабированию
+                        </p>
+                    </div>
+                    <div class="template-card">
+                        <div class="template-icon">🔍</div>
+                        <h4 class="template-title">Кастомный отчет</h4>
+                        <p class="template-description">
+                            Создайте собственный отчет с нужными метриками
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

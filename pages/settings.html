@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки - Система Мониторинга</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2332;
+            --accent-primary: #00ff88;
+            --accent-secondary: #00ccff;
+            --accent-warning: #ffaa00;
+            --accent-danger: #ff3366;
+            --text-primary: #e4e8f0;
+            --text-secondary: #8b94a8;
+            --border-color: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 204, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 32px 0;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 32px 40px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 32px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--accent-primary);
+            background: rgba(0, 255, 136, 0.05);
+            border-left-color: var(--accent-primary);
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            opacity: 0.7;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .header-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: #0a0e1a;
+        }
+
+        .btn-primary:hover {
+            background: #00ff99;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Settings Navigation */
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 32px;
+        }
+
+        .settings-nav {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            height: fit-content;
+        }
+
+        .settings-nav-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
+
+        .settings-nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .settings-nav-item.active {
+            background: var(--bg-tertiary);
+            color: var(--accent-primary);
+            font-weight: 500;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .settings-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .section-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-help {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toggle-group:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-info {
+            flex: 1;
+        }
+
+        .toggle-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .toggle-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            background: var(--bg-tertiary);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-switch.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--text-primary);
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active::after {
+            left: 27px;
+            background: #0a0e1a;
+        }
+
+        /* Alert Thresholds */
+        .threshold-item {
+            display: grid;
+            grid-template-columns: 1fr 120px 120px;
+            gap: 16px;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .threshold-item:last-child {
+            border-bottom: none;
+        }
+
+        .threshold-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .threshold-input {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+        }
+
+        /* Notification Settings */
+        .notification-channels {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .channel-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .channel-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .channel-card.active {
+            border-color: var(--accent-primary);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .channel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .channel-icon {
+            font-size: 24px;
+        }
+
+        .channel-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .channel-status.active {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-primary);
+        }
+
+        .channel-status.inactive {
+            background: rgba(139, 148, 168, 0.15);
+            color: var(--text-secondary);
+        }
+
+        .channel-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .channel-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 24px;
+        }
+
+        .btn-danger {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--accent-danger);
+            border: 1px solid var(--accent-danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 51, 102, 0.2);
+        }
+
+        /* API Keys */
+        .api-key-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .api-key-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .api-key-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .api-key-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .api-key-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .api-key-btn:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .api-key-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .api-key-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .settings-section {
+            animation: fadeIn 0.5s ease backwards;
+        }
+
+        .settings-section:nth-child(1) { animation-delay: 0.05s; }
+        .settings-section:nth-child(2) { animation-delay: 0.1s; }
+        .settings-section:nth-child(3) { animation-delay: 0.15s; }
+        .settings-section:nth-child(4) { animation-delay: 0.2s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>MONITOR//SYS</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="objects.html" class="nav-link">
+                            <span class="nav-icon">🖥️</span>
+                            Объекты мониторинга
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="object-detail.html" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            Детали объекта
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="alerts.html" class="nav-link">
+                            <span class="nav-icon">🔔</span>
+                            Алерты и уведомления
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            Отчеты и графики
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link active">
+                            <span class="nav-icon">⚙️</span>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div class="header-title">
+                    <h2>Настройки системы</h2>
+                    <p class="header-subtitle">Конфигурация мониторинга и уведомлений</p>
+                </div>
+            </div>
+
+            <div class="settings-layout">
+                <nav class="settings-nav">
+                    <div class="settings-nav-item active">
+                        <span>⚙️</span>
+                        <span>Основные</span>
+                    </div>
+                    <div class="settings-nav-item">
+                        <span>🔔</span>
+                        <span>Уведомления</span>
+                    </div>
+                    <div class="settings-nav-item">
+                        <span>📊</span>
+                        <span>Мониторинг</span>
+                    </div>
+                    <div class="settings-nav-item">
+                        <span>🔐</span>
+                        <span>API & Интеграции</span>
+                    </div>
+                    <div class="settings-nav-item">
+                        <span>👥</span>
+                        <span>Пользователи</span>
+                    </div>
+                    <div class="settings-nav-item">
+                        <span>🎨</span>
+                        <span>Внешний вид</span>
+                    </div>
+                </nav>
+
+                <div class="settings-content">
+                    <!-- General Settings -->
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Основные настройки</h3>
+                            <p class="section-description">
+                                Общие параметры системы мониторинга
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Название системы</label>
+                            <input type="text" class="form-input" value="MONITOR//SYS Production">
+                            <p class="form-help">Отображается в интерфейсе и уведомлениях</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Часовой пояс</label>
+                            <select class="form-select">
+                                <option>UTC+0 (GMT)</option>
+                                <option selected>UTC+3 (Moscow)</option>
+                                <option>UTC+5 (Yekaterinburg)</option>
+                                <option>UTC+7 (Novosibirsk)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Интервал обновления данных</label>
+                            <select class="form-select">
+                                <option>15 секунд</option>
+                                <option selected>30 секунд</option>
+                                <option>1 минута</option>
+                                <option>5 минут</option>
+                            </select>
+                            <p class="form-help">Как часто обновлять метрики в реальном времени</p>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary">Отменить</button>
+                            <button class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </div>
+
+                    <!-- Alert Thresholds -->
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Пороги алертов</h3>
+                            <p class="section-description">
+                                Настройка критических значений для автоматических уведомлений
+                            </p>
+                        </div>
+
+                        <div class="threshold-item">
+                            <span class="threshold-label">CPU Usage</span>
+                            <div>
+                                <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 4px;">WARNING</label>
+                                <input type="text" class="threshold-input" value="75%">
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 4px;">CRITICAL</label>
+                                <input type="text" class="threshold-input" value="90%">
+                            </div>
+                        </div>
+
+                        <div class="threshold-item">
+                            <span class="threshold-label">Memory Usage</span>
+                            <div>
+                                <input type="text" class="threshold-input" value="80%">
+                            </div>
+                            <div>
+                                <input type="text" class="threshold-input" value="95%">
+                            </div>
+                        </div>
+
+                        <div class="threshold-item">
+                            <span class="threshold-label">Disk Usage</span>
+                            <div>
+                                <input type="text" class="threshold-input" value="85%">
+                            </div>
+                            <div>
+                                <input type="text" class="threshold-input" value="95%">
+                            </div>
+                        </div>
+
+                        <div class="threshold-item">
+                            <span class="threshold-label">Response Time</span>
+                            <div>
+                                <input type="text" class="threshold-input" value="500ms">
+                            </div>
+                            <div>
+                                <input type="text" class="threshold-input" value="1000ms">
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary">Сбросить по умолчанию</button>
+                            <button class="btn btn-primary">Сохранить пороги</button>
+                        </div>
+                    </div>
+
+                    <!-- Notification Channels -->
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Каналы уведомлений</h3>
+                            <p class="section-description">
+                                Выберите способы получения уведомлений о событиях
+                            </p>
+                        </div>
+
+                        <div class="notification-channels">
+                            <div class="channel-card active">
+                                <div class="channel-header">
+                                    <span class="channel-icon">📧</span>
+                                    <span class="channel-status active">Active</span>
+                                </div>
+                                <h4 class="channel-name">Email</h4>
+                                <p class="channel-description">Получать уведомления на почту</p>
+                            </div>
+
+                            <div class="channel-card active">
+                                <div class="channel-header">
+                                    <span class="channel-icon">💬</span>
+                                    <span class="channel-status active">Active</span>
+                                </div>
+                                <h4 class="channel-name">Slack</h4>
+                                <p class="channel-description">Уведомления в Slack канал</p>
+                            </div>
+
+                            <div class="channel-card">
+                                <div class="channel-header">
+                                    <span class="channel-icon">📱</span>
+                                    <span class="channel-status inactive">Inactive</span>
+                                </div>
+                                <h4 class="channel-name">Telegram</h4>
+                                <p class="channel-description">Push-уведомления в Telegram</p>
+                            </div>
+
+                            <div class="channel-card">
+                                <div class="channel-header">
+                                    <span class="channel-icon">🔔</span>
+                                    <span class="channel-status inactive">Inactive</span>
+                                </div>
+                                <h4 class="channel-name">PagerDuty</h4>
+                                <p class="channel-description">Интеграция с PagerDuty</p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px;">
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-title">Группировка уведомлений</div>
+                                    <div class="toggle-description">Объединять похожие алерты в одно уведомление</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-title">Тихий режим</div>
+                                    <div class="toggle-description">Не отправлять уведомления с 22:00 до 08:00</div>
+                                </div>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary">Настроить каналы</button>
+                        </div>
+                    </div>
+
+                    <!-- API Keys -->
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h3 class="section-title">API ключи</h3>
+                            <p class="section-description">
+                                Управление ключами доступа для интеграций и внешних систем
+                            </p>
+                        </div>
+
+                        <div class="api-key-item">
+                            <div class="api-key-header">
+                                <span class="api-key-name">Production API Key</span>
+                                <div class="api-key-actions">
+                                    <button class="api-key-btn">Скопировать</button>
+                                    <button class="api-key-btn">Обновить</button>
+                                    <button class="api-key-btn" style="color: var(--accent-danger);">Удалить</button>
+                                </div>
+                            </div>
+                            <div class="api-key-value">sk_prod_••••••••••••••••••••••••4a2f</div>
+                            <div class="api-key-meta">
+                                <span>Создан: 15 янв 2025</span>
+                                <span>Последнее использование: 2 мин назад</span>
+                                <span>Запросов: 124,523</span>
+                            </div>
+                        </div>
+
+                        <div class="api-key-item">
+                            <div class="api-key-header">
+                                <span class="api-key-name">Development API Key</span>
+                                <div class="api-key-actions">
+                                    <button class="api-key-btn">Скопировать</button>
+                                    <button class="api-key-btn">Обновить</button>
+                                    <button class="api-key-btn" style="color: var(--accent-danger);">Удалить</button>
+                                </div>
+                            </div>
+                            <div class="api-key-value">sk_dev_••••••••••••••••••••••••7b9c</div>
+                            <div class="api-key-meta">
+                                <span>Создан: 03 фев 2025</span>
+                                <span>Последнее использование: 1 час назад</span>
+                                <span>Запросов: 8,421</span>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary">+ Создать новый ключ</button>
+                        </div>
+                    </div>
+
+                    <!-- Data Retention -->
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Хранение данных</h3>
+                            <p class="section-description">
+                                Настройка периода хранения метрик и логов
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Метрики в реальном времени</label>
+                            <select class="form-select">
+                                <option>24 часа</option>
+                                <option selected>7 дней</option>
+                                <option>30 дней</option>
+                                <option>90 дней</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Агрегированные метрики</label>
+                            <select class="form-select">
+                                <option>30 дней</option>
+                                <option>90 дней</option>
+                                <option selected>1 год</option>
+                                <option>2 года</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Системные логи</label>
+                            <select class="form-select">
+                                <option selected>30 дней</option>
+                                <option>90 дней</option>
+                                <option>180 дней</option>
+                                <option>1 год</option>
+                            </select>
+                        </div>
+
+                        <div class="toggle-group">
+                            <div class="toggle-info">
+                                <div class="toggle-title">Автоматическая очистка</div>
+                                <div class="toggle-description">Удалять устаревшие данные автоматически</div>
+                            </div>
+                            <div class="toggle-switch active"></div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-danger">Очистить старые данные</button>
+                            <button class="btn btn-primary">Сохранить настройки</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

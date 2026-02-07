@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Объекты мониторинга - Система Мониторинга</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2332;
+            --accent-primary: #00ff88;
+            --accent-secondary: #00ccff;
+            --accent-warning: #ffaa00;
+            --accent-danger: #ff3366;
+            --text-primary: #e4e8f0;
+            --text-secondary: #8b94a8;
+            --border-color: #1f2937;
+            --glow: rgba(0, 255, 136, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 204, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 32px 0;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 32px 40px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 32px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--accent-primary);
+            background: rgba(0, 255, 136, 0.05);
+            border-left-color: var(--accent-primary);
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            opacity: 0.7;
+        }
+
+        .nav-link.active .nav-icon {
+            opacity: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .header-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: #0a0e1a;
+        }
+
+        .btn-primary:hover {
+            background: #00ff99;
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-input,
+        .filter-select {
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .summary-item {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .summary-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .summary-icon.online {
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .summary-icon.warning {
+            background: rgba(255, 170, 0, 0.1);
+        }
+
+        .summary-icon.offline {
+            background: rgba(255, 51, 102, 0.1);
+        }
+
+        .summary-content h4 {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 4px;
+        }
+
+        .summary-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Objects Grid */
+        .objects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .object-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .object-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .object-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.1);
+        }
+
+        .object-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .object-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .object-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .object-status.online {
+            background: var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .object-status.warning {
+            background: var(--accent-warning);
+            box-shadow: 0 0 10px var(--accent-warning);
+        }
+
+        .object-status.offline {
+            background: var(--accent-danger);
+            box-shadow: 0 0 10px var(--accent-danger);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .object-type {
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--accent-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .object-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .object-host {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .object-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .metric-bar {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .metric-fill.warning {
+            background: linear-gradient(90deg, var(--accent-warning), #ffcc00);
+        }
+
+        .metric-fill.danger {
+            background: linear-gradient(90deg, var(--accent-danger), #ff6688);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .page-btn {
+            padding: 8px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .page-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .page-btn.active {
+            background: var(--accent-primary);
+            color: #0a0e1a;
+            border-color: var(--accent-primary);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .object-card {
+            animation: fadeIn 0.5s ease backwards;
+        }
+
+        .object-card:nth-child(1) { animation-delay: 0.05s; }
+        .object-card:nth-child(2) { animation-delay: 0.1s; }
+        .object-card:nth-child(3) { animation-delay: 0.15s; }
+        .object-card:nth-child(4) { animation-delay: 0.2s; }
+        .object-card:nth-child(5) { animation-delay: 0.25s; }
+        .object-card:nth-child(6) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>MONITOR//SYS</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="objects.html" class="nav-link active">
+                            <span class="nav-icon">🖥️</span>
+                            Объекты мониторинга
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="object-detail.html" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            Детали объекта
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="alerts.html" class="nav-link">
+                            <span class="nav-icon">🔔</span>
+                            Алерты и уведомления
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            Отчеты и графики
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <div class="header-title">
+                    <h2>Объекты мониторинга</h2>
+                    <p class="header-subtitle">Управление и мониторинг всех серверов и приложений</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">Экспорт списка</button>
+                    <button class="btn btn-primary">+ Добавить объект</button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Поиск</label>
+                        <input type="text" class="filter-input" placeholder="Имя сервера или IP...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Статус</label>
+                        <select class="filter-select">
+                            <option>Все статусы</option>
+                            <option>Online</option>
+                            <option>Warning</option>
+                            <option>Offline</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Тип</label>
+                        <select class="filter-select">
+                            <option>Все типы</option>
+                            <option>Web Server</option>
+                            <option>Database</option>
+                            <option>Application</option>
+                            <option>Load Balancer</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Локация</label>
+                        <select class="filter-select">
+                            <option>Все локации</option>
+                            <option>US-East</option>
+                            <option>EU-West</option>
+                            <option>Asia-Pacific</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-secondary">Сбросить</button>
+                    <button class="btn btn-primary">Применить фильтры</button>
+                </div>
+            </div>
+
+            <!-- Stats Summary -->
+            <div class="stats-summary">
+                <div class="summary-item">
+                    <div class="summary-icon online">✓</div>
+                    <div class="summary-content">
+                        <h4>127</h4>
+                        <p>Активных серверов</p>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon warning">⚠</div>
+                    <div class="summary-content">
+                        <h4>12</h4>
+                        <p>С предупреждениями</p>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon offline">✕</div>
+                    <div class="summary-content">
+                        <h4>3</h4>
+                        <p>Недоступных</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objects Grid -->
+            <div class="objects-grid">
+                <div class="object-card">
+                    <div class="object-header">
+                        <span class="object-status online"></span>
+                        <span class="object-type">Web Server</span>
+                    </div>
+                    <h3 class="object-name">Production Web 01</h3>
+                    <div class="object-host">prod-web-01.example.com</div>
+                    <div class="object-metrics">
+                        <div class="metric">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value">45%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Memory</span>
+                            <span class="metric-value">62%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 62%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Disk</span>
+                            <span class="metric-value">38%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 38%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Network</span>
+                            <span class="metric-value">124 Mb/s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="object-card">
+                    <div class="object-header">
+                        <span class="object-status warning"></span>
+                        <span class="object-type">Database</span>
+                    </div>
+                    <h3 class="object-name">Primary Database</h3>
+                    <div class="object-host">prod-db-01.example.com</div>
+                    <div class="object-metrics">
+                        <div class="metric">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value">78%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill warning" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Memory</span>
+                            <span class="metric-value">89%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill warning" style="width: 89%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Disk</span>
+                            <span class="metric-value">71%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill warning" style="width: 71%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Connections</span>
+                            <span class="metric-value">456/500</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="object-card">
+                    <div class="object-header">
+                        <span class="object-status online"></span>
+                        <span class="object-type">Application</span>
+                    </div>
+                    <h3 class="object-name">API Gateway</h3>
+                    <div class="object-host">api-gateway-01.example.com</div>
+                    <div class="object-metrics">
+                        <div class="metric">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value">52%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 52%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Memory</span>
+                            <span class="metric-value">48%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 48%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Requests</span>
+                            <span class="metric-value">12.4K/min</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Response Time</span>
+                            <span class="metric-value">128ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="object-card">
+                    <div class="object-header">
+                        <span class="object-status offline"></span>
+                        <span class="object-type">Web Server</span>
+                    </div>
+                    <h3 class="object-name">Backup Web Server</h3>
+                    <div class="object-host">backup-web-03.example.com</div>
+                    <div class="object-metrics">
+                        <div class="metric">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value">0%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill danger" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Memory</span>
+                            <span class="metric-value">0%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill danger" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Status</span>
+                            <span class="metric-value" style="color: var(--accent-danger)">Offline</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Last Seen</span>
+                            <span class="metric-value">2h ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="object-card">
+                    <div class="object-header">
+                        <span class="object-status online"></span>
+                        <span class="object-type">Load Balancer</span>
+                    </div>
+                    <h3 class="object-name">Main Load Balancer</h3>
+                    <div class="object-host">lb-01.example.com</div>
+                    <div class="object-metrics">
+                        <div class="metric">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value">34%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 34%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Memory</span>
+                            <span class="metric-value">41%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 41%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Active Conns</span>
+                            <span class="metric-value">8,234</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Throughput</span>
+                            <span class="metric-value">2.1 GB/s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="object-card">
+                    <div class="object-header">
+                        <span class="object-status online"></span>
+                        <span class="object-type">Application</span>
+                    </div>
+                    <h3 class="object-name">Cache Server</h3>
+                    <div class="object-host">cache-01.example.com</div>
+                    <div class="object-metrics">
+                        <div class="metric">
+                            <span class="metric-label">CPU</span>
+                            <span class="metric-value">28%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 28%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Memory</span>
+                            <span class="metric-value">76%</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill warning" style="width: 76%"></div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Hit Rate</span>
+                            <span class="metric-value">94.2%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Keys</span>
+                            <span class="metric-value">1.2M</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-btn">←</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <button class="page-btn">→</button>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
