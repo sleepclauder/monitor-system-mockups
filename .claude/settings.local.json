@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(wc:*)",
+      "Bash(cd:*)",
+      "Bash(git -C \"D:\\\\CLAUDE\\\\monitor-system-mockups\" log --oneline)"
+    ]
+  }
+}
