@@ -41,7 +41,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(0, 204, 255, 0.05) 0%, transparent 50%);
             pointer-events: none;
@@ -116,6 +116,21 @@
             background: var(--bg-secondary);
         }
 
+        .btn-danger {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--accent-danger);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 51, 102, 0.25);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
         /* Filters Section */
         .filters-section {
             background: var(--bg-secondary);
@@ -127,7 +142,7 @@
 
         .filters-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 16px;
             margin-bottom: 16px;
         }
@@ -171,227 +186,323 @@
             justify-content: flex-end;
         }
 
-        /* Stats Summary */
-        .stats-summary {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 24px;
+        /* Filter Dropdowns */
+        .filter-dropdown {
+            position: relative;
         }
 
-        .summary-item {
-            flex: 1;
-            background: var(--bg-secondary);
+        .filter-dropdown-btn {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            appearance: none;
+            position: relative;
+            padding-right: 32px;
+        }
+
+        .filter-dropdown-btn::after {
+            content: '\25BE';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .filter-dropdown-btn:hover,
+        .filter-dropdown-btn:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .filter-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            min-width: 100%;
+            background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 20px;
-            display: flex;
+            padding: 8px;
+            z-index: 50;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .filter-dropdown-menu.open {
+            display: block;
+        }
+
+        /* Bulk Toolbar */
+        .bulk-toolbar {
+            display: none;
             align-items: center;
             gap: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            animation: slideDown 0.2s ease;
         }
 
-        .summary-icon {
-            width: 56px;
-            height: 56px;
+        .bulk-toolbar.visible {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bulk-toolbar-count {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            white-space: nowrap;
+        }
+
+        .bulk-toolbar-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .bulk-toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border-color);
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            min-width: 280px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
+            padding: 12px;
+            z-index: 50;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        .dropdown-menu-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 8px;
+        }
+
+        .dropdown-menu-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 28px;
+            gap: 10px;
+            padding: 10px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            font-size: 14px;
+            color: var(--text-primary);
         }
 
-        .summary-icon.online {
-            background: rgba(0, 255, 136, 0.1);
+        .dropdown-menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .summary-icon.warning {
-            background: rgba(255, 170, 0, 0.1);
+        .dropdown-menu-item input[type="checkbox"] {
+            accent-color: var(--accent-primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
         }
 
-        .summary-icon.offline {
-            background: rgba(255, 51, 102, 0.1);
+        .dropdown-menu-footer {
+            border-top: 1px solid var(--border-color);
+            margin-top: 8px;
+            padding-top: 12px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
         }
 
-        .summary-content h4 {
-            font-size: 28px;
-            font-weight: 700;
+        /* Table */
+        .table-wrapper {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .objects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .objects-table thead {
+            background: var(--bg-tertiary);
+        }
+
+        .objects-table th {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .objects-table td {
+            padding: 16px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .objects-table tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        .objects-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .objects-table tbody tr.selected {
+            background: rgba(0, 255, 136, 0.04);
+        }
+
+        .objects-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .objects-table input[type="checkbox"] {
+            accent-color: var(--accent-primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .th-checkbox,
+        .td-checkbox {
+            width: 48px;
+            text-align: center;
+        }
+
+        .object-name-cell {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .object-url-cell {
             font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent-secondary);
+            max-width: 320px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .group-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(0, 204, 255, 0.1);
+            border: 1px solid rgba(0, 204, 255, 0.2);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent-secondary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-right: 4px;
             margin-bottom: 4px;
         }
 
-        .summary-content p {
+        .tag--live {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .tag--hls {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--accent-warning);
+        }
+
+        .tag--mpegts {
+            background: rgba(0, 204, 255, 0.1);
+            color: var(--accent-secondary);
+        }
+
+        /* Pagination */
+        .table-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .table-info {
             font-size: 13px;
             color: var(--text-secondary);
         }
 
-        /* Objects Grid */
-        .objects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 20px;
-        }
-
-        .object-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .object-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--accent-primary);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
-
-        .object-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-primary);
-            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.1);
-        }
-
-        .object-card:hover::before {
-            transform: scaleY(1);
-        }
-
-        .object-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .object-status {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .object-status.online {
-            background: var(--accent-primary);
-            box-shadow: 0 0 10px var(--accent-primary);
-        }
-
-        .object-status.warning {
-            background: var(--accent-warning);
-            box-shadow: 0 0 10px var(--accent-warning);
-        }
-
-        .object-status.offline {
-            background: var(--accent-danger);
-            box-shadow: 0 0 10px var(--accent-danger);
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .object-type {
-            padding: 4px 10px;
-            background: var(--bg-tertiary);
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--accent-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .object-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-
-        .object-host {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .object-metrics {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .metric {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .metric-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .metric-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .metric-bar {
-            height: 4px;
-            background: var(--bg-tertiary);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-
-        .metric-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-
-        .metric-fill.warning {
-            background: linear-gradient(90deg, var(--accent-warning), #ffcc00);
-        }
-
-        .metric-fill.danger {
-            background: linear-gradient(90deg, var(--accent-danger), #ff6688);
-        }
-
-        /* Pagination */
         .pagination {
             display: flex;
-            justify-content: center;
             align-items: center;
             gap: 8px;
-            margin-top: 32px;
         }
 
         .page-btn {
             padding: 8px 14px;
-            background: var(--bg-secondary);
+            background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 14px;
+            font-family: 'Outfit', sans-serif;
         }
 
         .page-btn:hover {
-            background: var(--bg-tertiary);
+            background: var(--bg-secondary);
             border-color: var(--accent-primary);
         }
 
@@ -401,21 +512,130 @@
             border-color: var(--accent-primary);
         }
 
+        /* Context Menu */
+        .context-menu {
+            display: none;
+            position: fixed;
+            min-width: 200px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px;
+            z-index: 999;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .context-menu.open {
+            display: block;
+        }
+
+        .context-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .context-menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .context-menu-item--danger {
+            color: var(--accent-danger);
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 0;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 440px;
+            width: 100%;
+            animation: modalIn 0.2s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            background: rgba(255, 51, 102, 0.1);
+        }
+
+        .modal h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .modal p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .object-card {
-            animation: fadeIn 0.5s ease backwards;
+        .objects-table tbody tr {
+            animation: fadeIn 0.3s ease backwards;
         }
 
-        .object-card:nth-child(1) { animation-delay: 0.05s; }
-        .object-card:nth-child(2) { animation-delay: 0.1s; }
-        .object-card:nth-child(3) { animation-delay: 0.15s; }
-        .object-card:nth-child(4) { animation-delay: 0.2s; }
-        .object-card:nth-child(5) { animation-delay: 0.25s; }
-        .object-card:nth-child(6) { animation-delay: 0.3s; }
+        .objects-table tbody tr:nth-child(1) { animation-delay: 0.03s; }
+        .objects-table tbody tr:nth-child(2) { animation-delay: 0.06s; }
+        .objects-table tbody tr:nth-child(3) { animation-delay: 0.09s; }
+        .objects-table tbody tr:nth-child(4) { animation-delay: 0.12s; }
+        .objects-table tbody tr:nth-child(5) { animation-delay: 0.15s; }
+        .objects-table tbody tr:nth-child(6) { animation-delay: 0.18s; }
+        .objects-table tbody tr:nth-child(7) { animation-delay: 0.21s; }
+        .objects-table tbody tr:nth-child(8) { animation-delay: 0.24s; }
     </style>
 </head>
 <body>
@@ -427,7 +647,7 @@
             <div class="header">
                 <div class="header-title">
                     <h2>Объекты мониторинга</h2>
-                    <p class="header-subtitle">Управление и мониторинг всех серверов и приложений</p>
+                    <p class="header-subtitle">Управление потоками HLS / MPEG-TS</p>
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-secondary">Экспорт списка</button>
@@ -440,287 +660,420 @@
                 <div class="filters-grid">
                     <div class="filter-group">
                         <label class="filter-label">Поиск</label>
-                        <input type="text" class="filter-input" placeholder="Имя сервера или IP...">
+                        <input type="text" class="filter-input" placeholder="Имя объекта или URL...">
                     </div>
                     <div class="filter-group">
-                        <label class="filter-label">Статус</label>
-                        <select class="filter-select">
-                            <option>Все статусы</option>
-                            <option>Online</option>
-                            <option>Warning</option>
-                            <option>Offline</option>
-                        </select>
+                        <label class="filter-label">Группа</label>
+                        <div class="filter-dropdown" id="filterGroupDropdown">
+                            <button class="filter-dropdown-btn" id="filterGroupBtn">Все группы</button>
+                            <div class="filter-dropdown-menu" id="filterGroupMenu">
+                                <label class="dropdown-menu-item">
+                                    <input type="checkbox" value="administrators"> Administrators
+                                </label>
+                                <label class="dropdown-menu-item">
+                                    <input type="checkbox" value="operators"> Operators
+                                </label>
+                                <label class="dropdown-menu-item">
+                                    <input type="checkbox" value="engineers"> Engineers
+                                </label>
+                                <label class="dropdown-menu-item">
+                                    <input type="checkbox" value="guests"> Guests
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="filter-group">
-                        <label class="filter-label">Тип</label>
-                        <select class="filter-select">
-                            <option>Все типы</option>
-                            <option>Web Server</option>
-                            <option>Database</option>
-                            <option>Application</option>
-                            <option>Load Balancer</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Локация</label>
-                        <select class="filter-select">
-                            <option>Все локации</option>
-                            <option>US-East</option>
-                            <option>EU-West</option>
-                            <option>Asia-Pacific</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="filter-actions">
-                    <button class="btn btn-secondary">Сбросить</button>
-                    <button class="btn btn-primary">Применить фильтры</button>
-                </div>
-            </div>
-
-            <!-- Stats Summary -->
-            <div class="stats-summary">
-                <div class="summary-item">
-                    <div class="summary-icon online">✓</div>
-                    <div class="summary-content">
-                        <h4>127</h4>
-                        <p>Активных серверов</p>
-                    </div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-icon warning">⚠</div>
-                    <div class="summary-content">
-                        <h4>12</h4>
-                        <p>С предупреждениями</p>
-                    </div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-icon offline">✕</div>
-                    <div class="summary-content">
-                        <h4>3</h4>
-                        <p>Недоступных</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Objects Grid -->
-            <div class="objects-grid">
-                <div class="object-card">
-                    <div class="object-header">
-                        <span class="object-status online"></span>
-                        <span class="object-type">Web Server</span>
-                    </div>
-                    <h3 class="object-name">Production Web 01</h3>
-                    <div class="object-host">prod-web-01.example.com</div>
-                    <div class="object-metrics">
-                        <div class="metric">
-                            <span class="metric-label">CPU</span>
-                            <span class="metric-value">45%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill" style="width: 45%"></div>
+                        <label class="filter-label">Тег</label>
+                        <div class="filter-dropdown" id="filterTagDropdown">
+                            <button class="filter-dropdown-btn" id="filterTagBtn">Все теги</button>
+                            <div class="filter-dropdown-menu" id="filterTagMenu">
+                                <label class="dropdown-menu-item">
+                                    <input type="checkbox" value="hls"> HLS
+                                </label>
+                                <label class="dropdown-menu-item">
+                                    <input type="checkbox" value="mpegts"> MPEG-TS
+                                </label>
+                                <label class="dropdown-menu-item">
+                                    <input type="checkbox" value="live"> Live
+                                </label>
+                                <label class="dropdown-menu-item">
+                                    <input type="checkbox" value="vod"> VOD
+                                </label>
                             </div>
                         </div>
-                        <div class="metric">
-                            <span class="metric-label">Memory</span>
-                            <span class="metric-value">62%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill" style="width: 62%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Disk</span>
-                            <span class="metric-value">38%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill" style="width: 38%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Network</span>
-                            <span class="metric-value">124 Mb/s</span>
-                        </div>
                     </div>
-                </div>
-
-                <div class="object-card">
-                    <div class="object-header">
-                        <span class="object-status warning"></span>
-                        <span class="object-type">Database</span>
-                    </div>
-                    <h3 class="object-name">Primary Database</h3>
-                    <div class="object-host">prod-db-01.example.com</div>
-                    <div class="object-metrics">
-                        <div class="metric">
-                            <span class="metric-label">CPU</span>
-                            <span class="metric-value">78%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill warning" style="width: 78%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Memory</span>
-                            <span class="metric-value">89%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill warning" style="width: 89%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Disk</span>
-                            <span class="metric-value">71%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill warning" style="width: 71%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Connections</span>
-                            <span class="metric-value">456/500</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="object-card">
-                    <div class="object-header">
-                        <span class="object-status online"></span>
-                        <span class="object-type">Application</span>
-                    </div>
-                    <h3 class="object-name">API Gateway</h3>
-                    <div class="object-host">api-gateway-01.example.com</div>
-                    <div class="object-metrics">
-                        <div class="metric">
-                            <span class="metric-label">CPU</span>
-                            <span class="metric-value">52%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill" style="width: 52%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Memory</span>
-                            <span class="metric-value">48%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill" style="width: 48%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Requests</span>
-                            <span class="metric-value">12.4K/min</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Response Time</span>
-                            <span class="metric-value">128ms</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="object-card">
-                    <div class="object-header">
-                        <span class="object-status offline"></span>
-                        <span class="object-type">Web Server</span>
-                    </div>
-                    <h3 class="object-name">Backup Web Server</h3>
-                    <div class="object-host">backup-web-03.example.com</div>
-                    <div class="object-metrics">
-                        <div class="metric">
-                            <span class="metric-label">CPU</span>
-                            <span class="metric-value">0%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill danger" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Memory</span>
-                            <span class="metric-value">0%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill danger" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Status</span>
-                            <span class="metric-value" style="color: var(--accent-danger)">Offline</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Last Seen</span>
-                            <span class="metric-value">2h ago</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="object-card">
-                    <div class="object-header">
-                        <span class="object-status online"></span>
-                        <span class="object-type">Load Balancer</span>
-                    </div>
-                    <h3 class="object-name">Main Load Balancer</h3>
-                    <div class="object-host">lb-01.example.com</div>
-                    <div class="object-metrics">
-                        <div class="metric">
-                            <span class="metric-label">CPU</span>
-                            <span class="metric-value">34%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill" style="width: 34%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Memory</span>
-                            <span class="metric-value">41%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill" style="width: 41%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Active Conns</span>
-                            <span class="metric-value">8,234</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Throughput</span>
-                            <span class="metric-value">2.1 GB/s</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="object-card">
-                    <div class="object-header">
-                        <span class="object-status online"></span>
-                        <span class="object-type">Application</span>
-                    </div>
-                    <h3 class="object-name">Cache Server</h3>
-                    <div class="object-host">cache-01.example.com</div>
-                    <div class="object-metrics">
-                        <div class="metric">
-                            <span class="metric-label">CPU</span>
-                            <span class="metric-value">28%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill" style="width: 28%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Memory</span>
-                            <span class="metric-value">76%</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill warning" style="width: 76%"></div>
-                            </div>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Hit Rate</span>
-                            <span class="metric-value">94.2%</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Keys</span>
-                            <span class="metric-value">1.2M</span>
+                    <div class="filter-group" style="justify-content: flex-end;">
+                        <div class="filter-actions" style="margin-top: auto;">
+                            <button class="btn btn-secondary btn-sm">Сбросить</button>
+                            <button class="btn btn-primary btn-sm">Применить</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <button class="page-btn">←</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">4</button>
-                <button class="page-btn">5</button>
-                <button class="page-btn">→</button>
+            <!-- Bulk Actions Toolbar -->
+            <div class="bulk-toolbar" id="bulkToolbar">
+                <span class="bulk-toolbar-count" id="selectedCount">Выбрано: 0</span>
+                <div class="bulk-toolbar-divider"></div>
+                <div class="bulk-toolbar-actions">
+                    <div class="dropdown" id="groupDropdown">
+                        <button class="btn btn-secondary btn-sm" id="groupDropdownBtn">Изменить группу</button>
+                        <div class="dropdown-menu" id="groupDropdownMenu">
+                            <div class="dropdown-menu-title">Выберите группы</div>
+                            <label class="dropdown-menu-item">
+                                <input type="checkbox" value="administrators"> Administrators
+                            </label>
+                            <label class="dropdown-menu-item">
+                                <input type="checkbox" value="operators"> Operators
+                            </label>
+                            <label class="dropdown-menu-item">
+                                <input type="checkbox" value="engineers"> Engineers
+                            </label>
+                            <label class="dropdown-menu-item">
+                                <input type="checkbox" value="guests"> Guests
+                            </label>
+                            <div class="dropdown-menu-footer">
+                                <button class="btn btn-secondary btn-sm" id="groupCancel">Отмена</button>
+                                <button class="btn btn-primary btn-sm" id="groupApply">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown" id="tagDropdown">
+                        <button class="btn btn-secondary btn-sm" id="tagDropdownBtn">Изменить теги</button>
+                        <div class="dropdown-menu" id="tagDropdownMenu">
+                            <div class="dropdown-menu-title">Выберите теги</div>
+                            <label class="dropdown-menu-item">
+                                <input type="checkbox" value="hls"> HLS
+                            </label>
+                            <label class="dropdown-menu-item">
+                                <input type="checkbox" value="mpegts"> MPEG-TS
+                            </label>
+                            <label class="dropdown-menu-item">
+                                <input type="checkbox" value="live"> Live
+                            </label>
+                            <label class="dropdown-menu-item">
+                                <input type="checkbox" value="vod"> VOD
+                            </label>
+                            <div class="dropdown-menu-footer">
+                                <button class="btn btn-secondary btn-sm" id="tagCancel">Отмена</button>
+                                <button class="btn btn-primary btn-sm" id="tagApply">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger btn-sm" id="bulkDeleteBtn">Удалить</button>
+                </div>
+            </div>
+
+            <!-- Objects Table -->
+            <div class="table-wrapper">
+                <table class="objects-table">
+                    <thead>
+                        <tr>
+                            <th class="th-checkbox"><input type="checkbox" id="selectAll"></th>
+                            <th>Название объекта</th>
+                            <th>URL</th>
+                            <th>Группа доступа</th>
+                            <th>Теги</th>
+                        </tr>
+                    </thead>
+                    <tbody id="objectsBody">
+                        <tr>
+                            <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                            <td class="object-name-cell">TV Channel 1 - Main Feed</td>
+                            <td class="object-url-cell">https://stream.example.com/ch1/index.m3u8</td>
+                            <td><span class="group-badge">Administrators</span> <span class="group-badge">Operators</span></td>
+                            <td><span class="tag tag--hls">HLS</span><span class="tag tag--live">Live</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                            <td class="object-name-cell">TV Channel 2 - Sports</td>
+                            <td class="object-url-cell">https://stream.example.com/ch2/index.m3u8</td>
+                            <td><span class="group-badge">Operators</span></td>
+                            <td><span class="tag tag--hls">HLS</span><span class="tag tag--live">Live</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                            <td class="object-name-cell">Radio Stream - FM 101.5</td>
+                            <td class="object-url-cell">udp://239.0.0.10:1234</td>
+                            <td><span class="group-badge">Operators</span> <span class="group-badge">Engineers</span></td>
+                            <td><span class="tag tag--mpegts">MPEG-TS</span><span class="tag tag--live">Live</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                            <td class="object-name-cell">Test Stream - QA</td>
+                            <td class="object-url-cell">https://staging.example.com/test/index.m3u8</td>
+                            <td><span class="group-badge">Engineers</span> <span class="group-badge">Guests</span></td>
+                            <td><span class="tag tag--hls">HLS</span><span class="tag tag--live">Live</span><span class="tag">VOD</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                            <td class="object-name-cell">Backup Feed - Channel 1</td>
+                            <td class="object-url-cell">udp://239.0.0.20:5500</td>
+                            <td><span class="group-badge">Administrators</span></td>
+                            <td><span class="tag tag--mpegts">MPEG-TS</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                            <td class="object-name-cell">Dev Environment Stream</td>
+                            <td class="object-url-cell">https://dev.example.com/stream/index.m3u8</td>
+                            <td><span class="group-badge">Engineers</span></td>
+                            <td><span class="tag tag--hls">HLS</span><span class="tag">VOD</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                            <td class="object-name-cell">TV Channel 3 - News 24/7</td>
+                            <td class="object-url-cell">https://stream.example.com/ch3/index.m3u8</td>
+                            <td><span class="group-badge">Administrators</span> <span class="group-badge">Guests</span></td>
+                            <td><span class="tag tag--hls">HLS</span><span class="tag tag--live">Live</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-checkbox"><input type="checkbox" class="row-checkbox"></td>
+                            <td class="object-name-cell">IPTV Multicast - Region A</td>
+                            <td class="object-url-cell">udp://239.1.1.1:8000</td>
+                            <td><span class="group-badge">Operators</span></td>
+                            <td><span class="tag tag--mpegts">MPEG-TS</span><span class="tag tag--live">Live</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer">
+                    <span class="table-info">Показано 1-8 из 142 объектов</span>
+                    <div class="pagination">
+                        <button class="page-btn">&larr;</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">...</button>
+                        <button class="page-btn">18</button>
+                        <button class="page-btn">&rarr;</button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" id="ctxChangeGroup">Изменить группу</div>
+        <div class="context-menu-item" id="ctxChangeTags">Изменить теги</div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item context-menu-item--danger" id="ctxDelete">Удалить</div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-icon">!</div>
+            <h3>Удалить объекты?</h3>
+            <p id="deleteModalText">Вы уверены, что хотите удалить выбранные объекты? Это действие нельзя отменить.</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="deleteCancel">Отмена</button>
+                <button class="btn btn-danger" id="deleteConfirm">Удалить</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../components/sidebar.js"></script>
+    <script>
+    (function () {
+        const selectAll = document.getElementById('selectAll');
+        const bulkToolbar = document.getElementById('bulkToolbar');
+        const selectedCountEl = document.getElementById('selectedCount');
+        const checkboxes = () => document.querySelectorAll('.row-checkbox');
+        const contextMenu = document.getElementById('contextMenu');
+        const deleteModal = document.getElementById('deleteModal');
+        const groupDropdownMenu = document.getElementById('groupDropdownMenu');
+        const tagDropdownMenu = document.getElementById('tagDropdownMenu');
+
+        function getSelectedCount() {
+            return document.querySelectorAll('.row-checkbox:checked').length;
+        }
+
+        function updateToolbar() {
+            const count = getSelectedCount();
+            if (count > 0) {
+                bulkToolbar.classList.add('visible');
+                selectedCountEl.textContent = 'Выбрано: ' + count;
+            } else {
+                bulkToolbar.classList.remove('visible');
+            }
+            // Update row highlight
+            checkboxes().forEach(cb => {
+                cb.closest('tr').classList.toggle('selected', cb.checked);
+            });
+        }
+
+        // Select all
+        selectAll.addEventListener('change', function () {
+            checkboxes().forEach(cb => { cb.checked = selectAll.checked; });
+            updateToolbar();
+        });
+
+        // Individual checkbox
+        document.getElementById('objectsBody').addEventListener('change', function (e) {
+            if (e.target.classList.contains('row-checkbox')) {
+                const all = checkboxes();
+                selectAll.checked = [...all].every(cb => cb.checked);
+                selectAll.indeterminate = !selectAll.checked && [...all].some(cb => cb.checked);
+                updateToolbar();
+            }
+        });
+
+        // Close all dropdowns helper
+        function closeAllDropdowns() {
+            groupDropdownMenu.classList.remove('open');
+            tagDropdownMenu.classList.remove('open');
+        }
+
+        // Prevent bulk dropdown close on internal click
+        groupDropdownMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+        tagDropdownMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+
+        // Group dropdown toggle
+        document.getElementById('groupDropdownBtn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            tagDropdownMenu.classList.remove('open');
+            groupDropdownMenu.classList.toggle('open');
+        });
+
+        document.getElementById('groupCancel').addEventListener('click', function () {
+            groupDropdownMenu.classList.remove('open');
+        });
+
+        document.getElementById('groupApply').addEventListener('click', function () {
+            groupDropdownMenu.classList.remove('open');
+        });
+
+        // Tag dropdown toggle
+        document.getElementById('tagDropdownBtn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            groupDropdownMenu.classList.remove('open');
+            tagDropdownMenu.classList.toggle('open');
+        });
+
+        document.getElementById('tagCancel').addEventListener('click', function () {
+            tagDropdownMenu.classList.remove('open');
+        });
+
+        document.getElementById('tagApply').addEventListener('click', function () {
+            tagDropdownMenu.classList.remove('open');
+        });
+
+        // Delete button -> modal
+        document.getElementById('bulkDeleteBtn').addEventListener('click', function () {
+            const count = getSelectedCount();
+            document.getElementById('deleteModalText').textContent =
+                'Вы уверены, что хотите удалить выбранные объекты (' + count + ' шт.)? Это действие нельзя отменить.';
+            deleteModal.classList.add('open');
+        });
+
+        document.getElementById('deleteCancel').addEventListener('click', function () {
+            deleteModal.classList.remove('open');
+        });
+
+        document.getElementById('deleteConfirm').addEventListener('click', function () {
+            deleteModal.classList.remove('open');
+            // Mock: remove selected rows
+            document.querySelectorAll('.row-checkbox:checked').forEach(cb => {
+                cb.closest('tr').remove();
+            });
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+            updateToolbar();
+        });
+
+        // Close modal on overlay click
+        deleteModal.addEventListener('click', function (e) {
+            if (e.target === deleteModal) deleteModal.classList.remove('open');
+        });
+
+        // Context menu
+        document.getElementById('objectsBody').addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            const tr = e.target.closest('tr');
+            if (!tr) return;
+            // Auto-select row if not already selected
+            const cb = tr.querySelector('.row-checkbox');
+            if (!cb.checked) {
+                checkboxes().forEach(c => { c.checked = false; });
+                cb.checked = true;
+                selectAll.checked = false;
+                selectAll.indeterminate = true;
+                updateToolbar();
+            }
+            contextMenu.style.left = e.clientX + 'px';
+            contextMenu.style.top = e.clientY + 'px';
+            contextMenu.classList.add('open');
+        });
+
+        document.getElementById('ctxChangeGroup').addEventListener('click', function () {
+            contextMenu.classList.remove('open');
+            closeAllDropdowns();
+            groupDropdownMenu.classList.add('open');
+        });
+
+        document.getElementById('ctxChangeTags').addEventListener('click', function () {
+            contextMenu.classList.remove('open');
+            closeAllDropdowns();
+            tagDropdownMenu.classList.add('open');
+        });
+
+        document.getElementById('ctxDelete').addEventListener('click', function () {
+            contextMenu.classList.remove('open');
+            document.getElementById('bulkDeleteBtn').click();
+        });
+
+        // Filter dropdowns
+        const filterGroupMenu = document.getElementById('filterGroupMenu');
+        const filterTagMenu = document.getElementById('filterTagMenu');
+        const filterGroupBtn = document.getElementById('filterGroupBtn');
+        const filterTagBtn = document.getElementById('filterTagBtn');
+
+        function closeAllFilterDropdowns() {
+            filterGroupMenu.classList.remove('open');
+            filterTagMenu.classList.remove('open');
+        }
+
+        function updateFilterBtnText(btn, menu, allLabel) {
+            const checked = menu.querySelectorAll('input[type="checkbox"]:checked');
+            if (checked.length === 0) {
+                btn.textContent = allLabel;
+            } else {
+                const labels = [...checked].map(cb => cb.parentElement.textContent.trim());
+                btn.textContent = labels.join(', ');
+            }
+        }
+
+        filterGroupBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            filterTagMenu.classList.remove('open');
+            filterGroupMenu.classList.toggle('open');
+        });
+
+        filterTagBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            filterGroupMenu.classList.remove('open');
+            filterTagMenu.classList.toggle('open');
+        });
+
+        filterGroupMenu.addEventListener('change', function () {
+            updateFilterBtnText(filterGroupBtn, filterGroupMenu, 'Все группы');
+        });
+
+        filterTagMenu.addEventListener('change', function () {
+            updateFilterBtnText(filterTagBtn, filterTagMenu, 'Все теги');
+        });
+
+        // Prevent filter dropdown close on internal click
+        filterGroupMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+        filterTagMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+
+        // Close menus on outside click
+        document.addEventListener('click', function () {
+            contextMenu.classList.remove('open');
+            closeAllDropdowns();
+            closeAllFilterDropdowns();
+        });
+    })();
+    </script>
 </body>
 </html>
