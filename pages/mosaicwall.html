@@ -38,8 +38,8 @@
 
         /* ─── Channel Panel ─────────────────────────────────── */
         .channel-panel {
-            width: 260px;
-            min-width: 260px;
+            width: 300px;
+            min-width: 300px;
             margin-left: 72px;
             background: var(--bg-secondary);
             border-right: 1px solid var(--border-color);
@@ -60,13 +60,13 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px;
+            padding: 14px 16px;
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
         }
 
         .panel-header-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -81,7 +81,7 @@
             cursor: pointer;
             padding: 4px 6px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             transition: color 0.2s, background 0.2s;
             flex-shrink: 0;
         }
@@ -92,7 +92,7 @@
         }
 
         .panel-search {
-            padding: 12px 16px;
+            padding: 10px 12px;
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
         }
@@ -102,73 +102,151 @@
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 8px 12px;
+            padding: 7px 11px;
             color: var(--text-primary);
             font-family: 'Outfit', sans-serif;
             font-size: 13px;
             outline: none;
-            white-space: nowrap;
         }
 
         .panel-search input::placeholder { color: var(--text-secondary); }
         .panel-search input:focus { border-color: var(--accent-primary); }
 
-        .channel-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px;
+        /* ─── Tag Filter Chips ──────────────────────────────── */
+        .tag-filters {
+            display: flex;
+            gap: 6px;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            flex-wrap: wrap;
         }
 
-        .channel-list::-webkit-scrollbar { width: 4px; }
-        .channel-list::-webkit-scrollbar-track { background: transparent; }
-        .channel-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
-
-        .channel-group-label {
+        .tag-chip {
+            padding: 3px 9px;
+            border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
-            letter-spacing: 0.1em;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            transition: all 0.15s;
+            white-space: nowrap;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .tag-chip:hover { color: var(--text-primary); border-color: var(--border-color); }
+
+        .tag-chip.active-all  { background: rgba(255,255,255,0.1); color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+        .tag-chip.active-hls  { background: rgba(0,204,255,0.15);  color: var(--accent-secondary); border-color: rgba(0,204,255,0.35); }
+        .tag-chip.active-mpegts { background: rgba(167,139,250,0.15); color: #a78bfa; border-color: rgba(167,139,250,0.35); }
+        .tag-chip.active-live { background: rgba(0,255,136,0.12); color: var(--accent-primary); border-color: rgba(0,255,136,0.3); }
+        .tag-chip.active-vod  { background: rgba(139,148,168,0.2); color: var(--text-secondary); border-color: rgba(139,148,168,0.35); }
+
+        /* ─── Channel Table ─────────────────────────────────── */
+        .channel-table-wrap {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .channel-table-wrap::-webkit-scrollbar { width: 4px; }
+        .channel-table-wrap::-webkit-scrollbar-track { background: transparent; }
+        .channel-table-wrap::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+
+        .channel-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .channel-table thead th {
+            padding: 7px 12px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--text-secondary);
-            padding: 8px 8px 4px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            text-align: left;
         }
 
-        .channel-item {
+        .channel-table thead th:first-child { width: 60%; }
+        .channel-table thead th:last-child  { width: 40%; }
+
+        .channel-table tbody tr {
+            cursor: grab;
+            transition: background 0.12s;
+            border-bottom: 1px solid rgba(31, 41, 55, 0.6);
+        }
+
+        .channel-table tbody tr:hover  { background: var(--bg-tertiary); }
+        .channel-table tbody tr:active { cursor: grabbing; }
+        .channel-table tbody tr.dragging { opacity: 0.35; }
+
+        .channel-table tbody tr.hidden-row { display: none; }
+
+        .channel-table td {
+            padding: 7px 12px;
+            vertical-align: middle;
+        }
+
+        .ch-name-cell {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 9px 10px;
-            border-radius: 6px;
-            cursor: grab;
-            user-select: none;
-            transition: background 0.15s;
-            white-space: nowrap;
+            gap: 7px;
+            min-width: 0;
         }
 
-        .channel-item:hover { background: var(--bg-tertiary); }
-        .channel-item:active { cursor: grabbing; }
-        .channel-item.dragging { opacity: 0.4; }
-
-        .channel-status-dot {
-            width: 7px;
-            height: 7px;
+        .ch-status-dot {
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             flex-shrink: 0;
         }
 
-        .channel-status-dot.online { background: var(--accent-primary); box-shadow: 0 0 6px var(--accent-primary); }
-        .channel-status-dot.offline { background: var(--text-secondary); }
-        .channel-status-dot.warning { background: var(--accent-warning); box-shadow: 0 0 6px var(--accent-warning); }
+        .ch-status-dot.online  { background: var(--accent-primary);  box-shadow: 0 0 5px var(--accent-primary); }
+        .ch-status-dot.offline { background: var(--text-secondary); }
+        .ch-status-dot.warning { background: var(--accent-warning); box-shadow: 0 0 5px var(--accent-warning); }
 
-        .channel-icon {
-            font-size: 15px;
-            flex-shrink: 0;
-        }
-
-        .channel-name {
-            font-size: 13px;
-            flex: 1;
+        .ch-name-text {
+            font-size: 12px;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ch-tags-cell {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        /* ─── Tag Pills ─────────────────────────────────────── */
+        .tag-pill {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        .tag-pill--live   { background: rgba(0,255,136,0.15);    color: var(--accent-primary);   border: 1px solid rgba(0,255,136,0.25); }
+        .tag-pill--hls    { background: rgba(0,204,255,0.12);    color: var(--accent-secondary); border: 1px solid rgba(0,204,255,0.25); }
+        .tag-pill--mpegts { background: rgba(167,139,250,0.12);  color: #a78bfa;                 border: 1px solid rgba(167,139,250,0.25); }
+        .tag-pill--vod    { background: rgba(139,148,168,0.15);  color: var(--text-secondary);   border: 1px solid rgba(139,148,168,0.2); }
+
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
         }
 
         /* ─── Main Area ─────────────────────────────────────── */
@@ -213,10 +291,7 @@
             white-space: nowrap;
         }
 
-        .panel-open-btn:hover {
-            color: var(--text-primary);
-            border-color: var(--accent-primary);
-        }
+        .panel-open-btn:hover { color: var(--text-primary); border-color: var(--accent-primary); }
 
         .page-title {
             font-size: 16px;
@@ -258,16 +333,14 @@
         .btn-danger:hover { background: rgba(255, 51, 102, 0.22); }
 
         /* ─── Bookmarks Dropdown ────────────────────────────── */
-        .bookmarks-wrap {
-            position: relative;
-        }
+        .bookmarks-wrap { position: relative; }
 
         .dropdown-menu {
             display: none;
             position: absolute;
             top: calc(100% + 6px);
             right: 0;
-            min-width: 220px;
+            min-width: 230px;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -282,7 +355,6 @@
             padding: 6px;
             border-bottom: 1px solid var(--border-color);
         }
-
         .dropdown-section:last-child { border-bottom: none; }
 
         .dropdown-item {
@@ -301,11 +373,7 @@
             text-align: left;
             transition: background 0.15s;
         }
-
         .dropdown-item:hover { background: var(--bg-tertiary); }
-
-        .dropdown-item.danger { color: var(--accent-danger); }
-        .dropdown-item.danger:hover { background: rgba(255,51,102,0.1); }
 
         .dropdown-label {
             padding: 8px 12px 4px;
@@ -323,10 +391,7 @@
             padding: 2px 6px;
         }
 
-        .saved-layout-row .dropdown-item {
-            flex: 1;
-            padding: 7px 8px;
-        }
+        .saved-layout-row .dropdown-item { flex: 1; padding: 7px 8px; }
 
         .layout-delete-btn {
             background: none;
@@ -339,7 +404,6 @@
             transition: color 0.15s, background 0.15s;
             flex-shrink: 0;
         }
-
         .layout-delete-btn:hover { color: var(--accent-danger); background: rgba(255,51,102,0.1); }
 
         .dropdown-empty {
@@ -357,9 +421,7 @@
             padding: 16px;
         }
 
-        .player-area.drag-over {
-            background: rgba(0, 255, 136, 0.03);
-        }
+        .player-area.drag-over { background: rgba(0, 255, 136, 0.03); }
 
         .player-area::-webkit-scrollbar { width: 6px; height: 6px; }
         .player-area::-webkit-scrollbar-track { background: transparent; }
@@ -367,7 +429,7 @@
 
         .player-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 12px;
             align-content: start;
         }
@@ -394,10 +456,7 @@
 
         .drop-hint.hidden { opacity: 0; }
 
-        .hint-icon {
-            font-size: 18px;
-            opacity: 0.5;
-        }
+        .hint-icon { font-size: 18px; opacity: 0.5; }
 
         /* ─── Player Cell ───────────────────────────────────── */
         .player-cell {
@@ -417,7 +476,6 @@
 
         .player-cell:hover .player-controls { opacity: 1; }
 
-        /* Simulated video feed */
         .player-video {
             width: 100%;
             height: 100%;
@@ -431,10 +489,8 @@
             inset: 0;
             background: repeating-linear-gradient(
                 0deg,
-                transparent,
-                transparent 2px,
-                rgba(0,0,0,0.08) 2px,
-                rgba(0,0,0,0.08) 4px
+                transparent, transparent 2px,
+                rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
             );
             pointer-events: none;
         }
@@ -447,45 +503,50 @@
             justify-content: center;
         }
 
-        /* ─── Player Info Overlay ───────────────────────────── */
         .player-info {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 12px 10px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.75));
+            bottom: 0; left: 0; right: 0;
+            padding: 20px 10px 8px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
+            gap: 6px;
         }
 
         .player-channel-name {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: #fff;
             text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .player-live-badge {
-            font-size: 10px;
+        .player-info-tags {
+            display: flex;
+            gap: 3px;
+            flex-shrink: 0;
+        }
+
+        .player-tag-badge {
+            font-size: 9px;
             font-weight: 700;
-            letter-spacing: 0.05em;
-            padding: 2px 6px;
+            letter-spacing: 0.04em;
+            padding: 2px 5px;
             border-radius: 3px;
-            background: var(--accent-danger);
             color: #fff;
         }
 
-        .player-live-badge.offline {
-            background: var(--text-secondary);
-        }
+        .player-tag-badge.live   { background: var(--accent-danger); }
+        .player-tag-badge.hls    { background: rgba(0,204,255,0.75); }
+        .player-tag-badge.mpegts { background: rgba(167,139,250,0.75); }
+        .player-tag-badge.vod    { background: rgba(100,100,120,0.75); }
 
-        /* ─── Player Controls ───────────────────────────────── */
         .player-controls {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 8px; right: 8px;
             display: flex;
             gap: 4px;
             opacity: 0;
@@ -493,31 +554,24 @@
         }
 
         .player-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
             border: none;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background 0.15s;
         }
 
-        .player-btn-close {
-            background: rgba(255, 51, 102, 0.75);
-            color: #fff;
-        }
+        .player-btn-close { background: rgba(255,51,102,0.75); color: #fff; }
         .player-btn-close:hover { background: var(--accent-danger); }
-
-        .player-btn-fs {
-            background: rgba(0,0,0,0.6);
-            color: rgba(255,255,255,0.8);
-        }
+        .player-btn-fs    { background: rgba(0,0,0,0.6);  color: rgba(255,255,255,0.8); }
         .player-btn-fs:hover { background: rgba(0,0,0,0.85); color: #fff; }
 
-        /* ─── Fullscreen Modal ──────────────────────────────── */
+        /* ─── Fullscreen ────────────────────────────────────── */
         .fs-overlay {
             display: none;
             position: fixed;
@@ -535,40 +589,23 @@
             padding: 10px 16px;
             background: rgba(0,0,0,0.8);
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1;
         }
 
-        .fs-channel-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-        }
+        .fs-channel-name { font-size: 14px; font-weight: 600; color: #fff; }
 
         .fs-close-btn {
             background: rgba(255,255,255,0.1);
-            border: none;
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
+            border: none; color: #fff;
+            padding: 6px 14px; border-radius: 6px;
+            cursor: pointer; font-size: 13px;
             font-family: 'Outfit', sans-serif;
         }
         .fs-close-btn:hover { background: rgba(255,255,255,0.2); }
 
         .fs-video {
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .fs-video-inner {
-            width: 100%;
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -582,13 +619,31 @@
     <!-- ─── Channel Panel ───────────────────────────────── -->
     <div class="channel-panel" id="channelPanel">
         <div class="panel-header">
-            <span class="panel-header-title">Каналы</span>
+            <span class="panel-header-title">Объекты мониторинга</span>
             <button class="panel-toggle-btn" id="panelCollapseBtn" title="Свернуть">◀</button>
         </div>
         <div class="panel-search">
-            <input type="text" id="channelSearch" placeholder="Поиск…">
+            <input type="text" id="channelSearch" placeholder="Поиск по названию…">
         </div>
-        <div class="channel-list" id="channelList"></div>
+        <div class="tag-filters" id="tagFilters">
+            <button class="tag-chip active-all" data-tag="all">Все</button>
+            <button class="tag-chip" data-tag="Live">Live</button>
+            <button class="tag-chip" data-tag="HLS">HLS</button>
+            <button class="tag-chip" data-tag="MPEG-TS">MPEG-TS</button>
+            <button class="tag-chip" data-tag="VOD">VOD</button>
+        </div>
+        <div class="channel-table-wrap">
+            <table class="channel-table" id="channelTable">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Теги</th>
+                    </tr>
+                </thead>
+                <tbody id="channelTableBody"></tbody>
+            </table>
+            <div class="no-results" id="noResults" style="display:none">Ничего не найдено</div>
+        </div>
     </div>
 
     <!-- ─── Main Area ───────────────────────────────────── -->
@@ -599,13 +654,13 @@
                 <span class="page-title">Мозаика</span>
             </div>
             <div class="toolbar-right">
-                <div class="bookmarks-wrap" id="bookmarksWrap">
+                <div class="bookmarks-wrap">
                     <button class="btn btn-secondary" id="bookmarksBtn">🔖 Закладки ▾</button>
                     <div class="dropdown-menu" id="dropdownMenu">
                         <div class="dropdown-section">
                             <button class="dropdown-item" id="saveLayoutBtn">💾 Сохранить раскладку</button>
                         </div>
-                        <div id="savedLayoutsSection">
+                        <div>
                             <div class="dropdown-label">Сохранённые</div>
                             <div id="savedLayoutsList">
                                 <div class="dropdown-empty">Нет сохранённых раскладок</div>
@@ -621,7 +676,7 @@
             <div class="player-grid" id="playerGrid"></div>
             <div class="drop-hint" id="dropHint">
                 <span class="hint-icon">⊞</span>
-                <span>Перетащите канал для просмотра</span>
+                <span>Перетащите объект для просмотра</span>
             </div>
         </div>
     </div>
@@ -638,98 +693,149 @@
 
 <script src="../components/sidebar.js"></script>
 <script>
-// ─── Channel Data ────────────────────────────────────────
+// ─── Channel Data (из objects.html) ──────────────────────
 const CHANNELS = [
-    { id: 1,  group: 'Склад А',      name: 'Вход — Склад А',       status: 'online',  color: '#00ff88' },
-    { id: 2,  group: 'Склад А',      name: 'Зона погрузки',        status: 'online',  color: '#00ccff' },
-    { id: 3,  group: 'Склад А',      name: 'Периметр Север',       status: 'warning', color: '#ffaa00' },
-    { id: 4,  group: 'Склад А',      name: 'Периметр Юг',          status: 'offline', color: '#8b94a8' },
-    { id: 5,  group: 'Офисный блок', name: 'Ресепшн',              status: 'online',  color: '#a78bfa' },
-    { id: 6,  group: 'Офисный блок', name: 'Коридор 1-й этаж',     status: 'online',  color: '#fb923c' },
-    { id: 7,  group: 'Офисный блок', name: 'Коридор 2-й этаж',     status: 'online',  color: '#f472b6' },
-    { id: 8,  group: 'Офисный блок', name: 'Серверная',            status: 'online',  color: '#34d399' },
-    { id: 9,  group: 'Парковка',     name: 'Въезд А',              status: 'online',  color: '#60a5fa' },
-    { id: 10, group: 'Парковка',     name: 'Въезд Б',              status: 'online',  color: '#fbbf24' },
-    { id: 11, group: 'Парковка',     name: 'Сектор 1-3',           status: 'warning', color: '#ffaa00' },
-    { id: 12, group: 'Парковка',     name: 'Сектор 4-6',           status: 'offline', color: '#8b94a8' },
+    { id: 1, name: 'TV Channel 1 — Main Feed',  tags: ['HLS', 'Live'],        status: 'online',  color: '#00ff88' },
+    { id: 2, name: 'TV Channel 2 — Sports',      tags: ['HLS', 'Live'],        status: 'online',  color: '#00ccff' },
+    { id: 3, name: 'Radio Stream — FM 101.5',    tags: ['MPEG-TS', 'Live'],    status: 'online',  color: '#a78bfa' },
+    { id: 4, name: 'Test Stream — QA',           tags: ['HLS', 'Live', 'VOD'], status: 'warning', color: '#ffaa00' },
+    { id: 5, name: 'Backup Feed — Channel 1',    tags: ['MPEG-TS'],            status: 'offline', color: '#8b94a8' },
+    { id: 6, name: 'Dev Environment Stream',     tags: ['HLS', 'VOD'],         status: 'offline', color: '#fb923c' },
+    { id: 7, name: 'TV Channel 3 — News 24/7',   tags: ['HLS', 'Live'],        status: 'online',  color: '#f472b6' },
+    { id: 8, name: 'IPTV Multicast — Region A',  tags: ['MPEG-TS', 'Live'],    status: 'online',  color: '#60a5fa' },
 ];
 
+const TAG_CLASS = {
+    'Live':    'active-live',
+    'HLS':     'active-hls',
+    'MPEG-TS': 'active-mpegts',
+    'VOD':     'active-vod',
+    'all':     'active-all',
+};
+
+const PILL_CLASS = {
+    'Live':    'tag-pill--live',
+    'HLS':     'tag-pill--hls',
+    'MPEG-TS': 'tag-pill--mpegts',
+    'VOD':     'tag-pill--vod',
+};
+
+const BADGE_CLASS = {
+    'Live':    'live',
+    'HLS':     'hls',
+    'MPEG-TS': 'mpegts',
+    'VOD':     'vod',
+};
+
 // ─── State ───────────────────────────────────────────────
-let players = [];       // [{id, channel}]
+let players = [];
 let nextPlayerId = 1;
-let panelOpen = true;
 let dragChannelId = null;
+let activeTag = 'all';
+let searchQuery = '';
 
-// ─── Render Channel List ─────────────────────────────────
-function renderChannelList(filter = '') {
-    const list = document.getElementById('channelList');
-    const groups = {};
-    CHANNELS.forEach(ch => {
-        if (filter && !ch.name.toLowerCase().includes(filter.toLowerCase())) return;
-        if (!groups[ch.group]) groups[ch.group] = [];
-        groups[ch.group].push(ch);
+// ─── Tag Filter Logic ─────────────────────────────────────
+document.getElementById('tagFilters').addEventListener('click', e => {
+    const chip = e.target.closest('.tag-chip');
+    if (!chip) return;
+
+    activeTag = chip.dataset.tag;
+
+    document.querySelectorAll('.tag-chip').forEach(c => {
+        c.className = 'tag-chip'; // reset
     });
 
-    list.innerHTML = '';
-    Object.entries(groups).forEach(([group, channels]) => {
-        const lbl = document.createElement('div');
-        lbl.className = 'channel-group-label';
-        lbl.textContent = group;
-        list.appendChild(lbl);
+    const cls = TAG_CLASS[activeTag] || 'active-all';
+    chip.classList.add(cls);
 
-        channels.forEach(ch => {
-            const item = document.createElement('div');
-            item.className = 'channel-item';
-            item.draggable = true;
-            item.dataset.channelId = ch.id;
-            item.innerHTML = `
-                <span class="channel-status-dot ${ch.status}"></span>
-                <span class="channel-icon">📷</span>
-                <span class="channel-name">${ch.name}</span>
-            `;
-            item.addEventListener('dragstart', e => {
-                dragChannelId = ch.id;
-                item.classList.add('dragging');
-                e.dataTransfer.effectAllowed = 'copy';
-            });
-            item.addEventListener('dragend', () => {
-                item.classList.remove('dragging');
-                dragChannelId = null;
-            });
-            list.appendChild(item);
-        });
+    applyFilters();
+});
+
+function applyFilters() {
+    const tbody = document.getElementById('channelTableBody');
+    const q = searchQuery.toLowerCase();
+    let visible = 0;
+
+    tbody.querySelectorAll('tr').forEach(row => {
+        const id = parseInt(row.dataset.channelId);
+        const ch = CHANNELS.find(c => c.id === id);
+        if (!ch) return;
+
+        const matchesTag    = activeTag === 'all' || ch.tags.includes(activeTag);
+        const matchesSearch = !q || ch.name.toLowerCase().includes(q);
+
+        if (matchesTag && matchesSearch) {
+            row.classList.remove('hidden-row');
+            visible++;
+        } else {
+            row.classList.add('hidden-row');
+        }
     });
 
-    if (!list.childElementCount) {
-        list.innerHTML = '<div style="padding:16px;font-size:13px;color:var(--text-secondary);text-align:center">Ничего не найдено</div>';
-    }
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
 }
 
-// ─── Player Cell Builder ─────────────────────────────────
+// ─── Build Channel Table ──────────────────────────────────
+function buildChannelTable() {
+    const tbody = document.getElementById('channelTableBody');
+    tbody.innerHTML = '';
+
+    CHANNELS.forEach(ch => {
+        const tr = document.createElement('tr');
+        tr.dataset.channelId = ch.id;
+        tr.draggable = true;
+
+        const tagsHtml = ch.tags
+            .map(t => `<span class="tag-pill ${PILL_CLASS[t] || ''}">${t}</span>`)
+            .join('');
+
+        tr.innerHTML = `
+            <td>
+                <div class="ch-name-cell">
+                    <span class="ch-status-dot ${ch.status}"></span>
+                    <span class="ch-name-text" title="${ch.name}">${ch.name}</span>
+                </div>
+            </td>
+            <td><div class="ch-tags-cell">${tagsHtml}</div></td>
+        `;
+
+        tr.addEventListener('dragstart', e => {
+            dragChannelId = ch.id;
+            tr.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'copy';
+        });
+        tr.addEventListener('dragend', () => {
+            tr.classList.remove('dragging');
+            dragChannelId = null;
+        });
+
+        tbody.appendChild(tr);
+    });
+}
+
+// ─── Player Cell ─────────────────────────────────────────
 function buildPlayerCell(playerId, channel) {
     const cell = document.createElement('div');
     cell.className = 'player-cell';
     cell.dataset.playerId = playerId;
 
-    // Simulated video gradient per channel color
     const bg = `radial-gradient(ellipse at 30% 40%, ${channel.color}18 0%, transparent 60%),
                 radial-gradient(ellipse at 70% 70%, ${channel.color}10 0%, transparent 50%),
                 #050810`;
 
-    const isLive = channel.status === 'online';
-    const isWarn = channel.status === 'warning';
+    const badgesHtml = channel.tags
+        .map(t => `<span class="player-tag-badge ${BADGE_CLASS[t] || ''}">${t}</span>`)
+        .join('');
 
     cell.innerHTML = `
         <div class="player-video">
-            <div class="player-noise" style="background: ${bg}">
-                <span style="font-size:32px;opacity:0.15">📷</span>
+            <div class="player-noise" style="background:${bg}">
+                <span style="font-size:28px;opacity:0.12">📺</span>
             </div>
         </div>
         <div class="player-info">
             <span class="player-channel-name">${channel.name}</span>
-            <span class="player-live-badge ${isLive || isWarn ? '' : 'offline'}">
-                ${isLive ? 'LIVE' : isWarn ? 'WARN' : 'OFF'}
-            </span>
+            <div class="player-info-tags">${badgesHtml}</div>
         </div>
         <div class="player-controls">
             <button class="player-btn player-btn-fs" title="На весь экран">⛶</button>
@@ -739,7 +845,6 @@ function buildPlayerCell(playerId, channel) {
 
     cell.querySelector('.player-btn-close').addEventListener('click', () => removePlayer(playerId));
     cell.querySelector('.player-btn-fs').addEventListener('click', () => openFullscreen(channel));
-
     return cell;
 }
 
@@ -747,19 +852,15 @@ function buildPlayerCell(playerId, channel) {
 function addPlayer(channelId) {
     const channel = CHANNELS.find(c => c.id === channelId);
     if (!channel) return;
-
     const playerId = nextPlayerId++;
     players.push({ id: playerId, channelId });
-
-    const grid = document.getElementById('playerGrid');
-    grid.appendChild(buildPlayerCell(playerId, channel));
+    document.getElementById('playerGrid').appendChild(buildPlayerCell(playerId, channel));
     updateHint();
 }
 
 function removePlayer(playerId) {
     players = players.filter(p => p.id !== playerId);
-    const cell = document.querySelector(`[data-player-id="${playerId}"]`);
-    if (cell) cell.remove();
+    document.querySelector(`[data-player-id="${playerId}"]`)?.remove();
     updateHint();
 }
 
@@ -770,12 +871,7 @@ function clearAll() {
 }
 
 function updateHint() {
-    const hint = document.getElementById('dropHint');
-    if (players.length > 0) {
-        hint.classList.add('hidden');
-    } else {
-        hint.classList.remove('hidden');
-    }
+    document.getElementById('dropHint').classList.toggle('hidden', players.length > 0);
 }
 
 // ─── Drop Zone ───────────────────────────────────────────
@@ -788,35 +884,27 @@ playerArea.addEventListener('dragover', e => {
 });
 
 playerArea.addEventListener('dragleave', e => {
-    if (!playerArea.contains(e.relatedTarget)) {
-        playerArea.classList.remove('drag-over');
-    }
+    if (!playerArea.contains(e.relatedTarget)) playerArea.classList.remove('drag-over');
 });
 
 playerArea.addEventListener('drop', e => {
     e.preventDefault();
     playerArea.classList.remove('drag-over');
-    if (dragChannelId !== null) {
-        addPlayer(dragChannelId);
-    }
+    if (dragChannelId !== null) addPlayer(dragChannelId);
 });
 
 // ─── Fullscreen ──────────────────────────────────────────
 function openFullscreen(channel) {
-    const overlay = document.getElementById('fsOverlay');
-    const fsVideo = document.getElementById('fsVideo');
-    document.getElementById('fsChannelName').textContent = channel.name;
-
     const bg = `radial-gradient(ellipse at 30% 40%, ${channel.color}18 0%, transparent 60%),
                 radial-gradient(ellipse at 70% 70%, ${channel.color}12 0%, transparent 50%),
                 #050810`;
 
-    fsVideo.innerHTML = `
-        <div class="fs-video-inner" style="background:${bg};width:100%;height:100%;justify-content:center;align-items:center;display:flex">
-            <span style="font-size:64px;opacity:0.1">📷</span>
-        </div>
-    `;
-    overlay.classList.add('open');
+    document.getElementById('fsChannelName').textContent = channel.name;
+    document.getElementById('fsVideo').innerHTML = `
+        <div style="background:${bg};width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+            <span style="font-size:64px;opacity:0.1">📺</span>
+        </div>`;
+    document.getElementById('fsOverlay').classList.add('open');
 }
 
 document.getElementById('fsCloseBtn').addEventListener('click', () => {
@@ -829,25 +917,24 @@ document.addEventListener('keydown', e => {
 
 // ─── Panel Toggle ────────────────────────────────────────
 document.getElementById('panelCollapseBtn').addEventListener('click', () => {
-    panelOpen = false;
     document.getElementById('channelPanel').classList.add('collapsed');
     document.getElementById('panelOpenBtn').style.display = '';
 });
 
 document.getElementById('panelOpenBtn').addEventListener('click', () => {
-    panelOpen = true;
     document.getElementById('channelPanel').classList.remove('collapsed');
     document.getElementById('panelOpenBtn').style.display = 'none';
 });
 
 // ─── Search ──────────────────────────────────────────────
 document.getElementById('channelSearch').addEventListener('input', e => {
-    renderChannelList(e.target.value);
+    searchQuery = e.target.value;
+    applyFilters();
 });
 
-// ─── Bookmarks Dropdown ──────────────────────────────────
-const bookmarksBtn = document.getElementById('bookmarksBtn');
-const dropdownMenu = document.getElementById('dropdownMenu');
+// ─── Bookmarks ───────────────────────────────────────────
+const bookmarksBtn  = document.getElementById('bookmarksBtn');
+const dropdownMenu  = document.getElementById('dropdownMenu');
 
 bookmarksBtn.addEventListener('click', e => {
     e.stopPropagation();
@@ -859,13 +946,10 @@ document.addEventListener('click', () => dropdownMenu.classList.remove('open'));
 dropdownMenu.addEventListener('click', e => e.stopPropagation());
 
 document.getElementById('saveLayoutBtn').addEventListener('click', () => {
-    if (players.length === 0) {
-        alert('Нет активных плееров для сохранения.');
-        return;
-    }
-    const name = prompt('Название раскладки:', `Раскладка ${new Date().toLocaleTimeString('ru', {hour:'2-digit',minute:'2-digit'})}`);
+    if (!players.length) { alert('Нет активных плееров для сохранения.'); return; }
+    const name = prompt('Название раскладки:',
+        `Раскладка ${new Date().toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'})}`);
     if (!name) return;
-
     const layouts = loadLayouts();
     layouts.push({ name, channels: players.map(p => p.channelId), ts: Date.now() });
     saveLayouts(layouts);
@@ -879,8 +963,8 @@ function loadLayouts() {
     try { return JSON.parse(localStorage.getItem('monix_layouts') || '[]'); } catch { return []; }
 }
 
-function saveLayouts(layouts) {
-    localStorage.setItem('monix_layouts', JSON.stringify(layouts));
+function saveLayouts(l) {
+    localStorage.setItem('monix_layouts', JSON.stringify(l));
 }
 
 function renderSavedLayouts() {
@@ -895,18 +979,20 @@ function renderSavedLayouts() {
         const row = document.createElement('div');
         row.className = 'saved-layout-row';
         row.innerHTML = `
-            <button class="dropdown-item">📐 ${layout.name} <span style="color:var(--text-secondary);font-size:11px;margin-left:auto">${layout.channels.length} кам.</span></button>
+            <button class="dropdown-item">📐 ${layout.name}
+                <span style="color:var(--text-secondary);font-size:11px;margin-left:auto">${layout.channels.length} объ.</span>
+            </button>
             <button class="layout-delete-btn" title="Удалить">🗑</button>
         `;
         row.querySelector('.dropdown-item').addEventListener('click', () => {
             clearAll();
-            layout.channels.forEach(chId => addPlayer(chId));
+            layout.channels.forEach(id => addPlayer(id));
             dropdownMenu.classList.remove('open');
         });
         row.querySelector('.layout-delete-btn').addEventListener('click', () => {
-            const layouts = loadLayouts();
-            layouts.splice(idx, 1);
-            saveLayouts(layouts);
+            const ls = loadLayouts();
+            ls.splice(idx, 1);
+            saveLayouts(ls);
             renderSavedLayouts();
         });
         container.appendChild(row);
@@ -914,7 +1000,7 @@ function renderSavedLayouts() {
 }
 
 // ─── Init ────────────────────────────────────────────────
-renderChannelList();
+buildChannelTable();
 updateHint();
 </script>
 </body>
