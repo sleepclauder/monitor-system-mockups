@@ -182,6 +182,7 @@
             cursor: grab;
             transition: background 0.12s;
             border-bottom: 1px solid rgba(31, 41, 55, 0.6);
+            height: 36px;
         }
 
         .channel-table tbody tr:hover  { background: var(--bg-tertiary); }
@@ -191,8 +192,10 @@
         .channel-table tbody tr.hidden-row { display: none; }
 
         .channel-table td {
-            padding: 7px 12px;
+            padding: 0 12px;
             vertical-align: middle;
+            height: 36px;
+            overflow: hidden;
         }
 
         .ch-name-cell {
@@ -223,7 +226,8 @@
         .ch-tags-cell {
             display: flex;
             gap: 4px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow: hidden;
         }
 
         /* ─── Tag Pills ─────────────────────────────────────── */
@@ -731,7 +735,7 @@ const BADGE_CLASS = {
 let players = [];
 let nextPlayerId = 1;
 let dragChannelId = null;
-let activeTag = 'all';
+let activeTags = new Set();   // пустой = «Все»
 let searchQuery = '';
 
 // ─── Tag Filter Logic ─────────────────────────────────────
@@ -739,17 +743,33 @@ document.getElementById('tagFilters').addEventListener('click', e => {
     const chip = e.target.closest('.tag-chip');
     if (!chip) return;
 
-    activeTag = chip.dataset.tag;
+    const tag = chip.dataset.tag;
 
-    document.querySelectorAll('.tag-chip').forEach(c => {
-        c.className = 'tag-chip'; // reset
-    });
+    if (tag === 'all') {
+        activeTags.clear();
+    } else {
+        if (activeTags.has(tag)) {
+            activeTags.delete(tag);
+        } else {
+            activeTags.add(tag);
+        }
+    }
 
-    const cls = TAG_CLASS[activeTag] || 'active-all';
-    chip.classList.add(cls);
-
+    syncChipStyles();
     applyFilters();
 });
+
+function syncChipStyles() {
+    document.querySelectorAll('.tag-chip').forEach(c => {
+        c.className = 'tag-chip';
+        const tag = c.dataset.tag;
+        if (tag === 'all') {
+            if (activeTags.size === 0) c.classList.add('active-all');
+        } else {
+            if (activeTags.has(tag)) c.classList.add(TAG_CLASS[tag] || '');
+        }
+    });
+}
 
 function applyFilters() {
     const tbody = document.getElementById('channelTableBody');
@@ -761,7 +781,8 @@ function applyFilters() {
         const ch = CHANNELS.find(c => c.id === id);
         if (!ch) return;
 
-        const matchesTag    = activeTag === 'all' || ch.tags.includes(activeTag);
+        // OR-логика: канал подходит, если имеет хотя бы один из выбранных тегов
+        const matchesTag    = activeTags.size === 0 || ch.tags.some(t => activeTags.has(t));
         const matchesSearch = !q || ch.name.toLowerCase().includes(q);
 
         if (matchesTag && matchesSearch) {
@@ -1001,6 +1022,7 @@ function renderSavedLayouts() {
 
 // ─── Init ────────────────────────────────────────────────
 buildChannelTable();
+syncChipStyles();
 updateHint();
 </script>
 </body>
