@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>MoniX Logo Variants</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0e1a;
+    color: #e4e8f0;
+    font-family: 'JetBrains Mono', monospace, sans-serif;
+    padding: 40px;
+  }
+  h1 { font-size: 16px; color: #8b94a8; margin-bottom: 32px; letter-spacing: 2px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    max-width: 800px;
+  }
+  .card {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    padding: 24px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #00ff88; }
+  .card .num { font-size: 11px; color: #00ff88; letter-spacing: 1px; }
+  .card .label { font-size: 10px; color: #8b94a8; text-align: center; }
+  /* показываем в реальном размере сайдбара */
+  .logo-wrap {
+    width: 72px;
+    height: 72px;
+    background: #111827;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+</head>
+<body>
+<h1>MONIX / LOGO VARIANTS — выбери вариант</h1>
+<div class="grid">
+
+  <!-- 1: Signal X -->
+  <div class="card">
+    <span class="num">01</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <defs>
+          <radialGradient id="bg1" cx="42%" cy="35%" r="68%">
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.09"/>
+            <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect width="48" height="48" rx="10" fill="url(#bg1)"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <path d="M6 42 L18 30 L20 34 L23 20 L26 28 L28 25 L42 6" stroke="#00ff88" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.14"/>
+        <path d="M6 42 L18 30 L20 34 L23 20 L26 28 L28 25 L42 6" stroke="#00ff88" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 6 L18 18 L20 14 L23 28 L26 20 L28 23 L42 42" stroke="#00ccff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.14"/>
+        <path d="M6 6 L18 18 L20 14 L23 28 L26 20 L28 23 L42 42" stroke="#00ccff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="24" r="6" fill="#00ff88" opacity="0.12"/>
+        <circle cx="24" cy="24" r="3.5" fill="#0b1422"/>
+        <circle cx="24" cy="24" r="2.5" fill="none" stroke="#00ff88" stroke-width="1.5"/>
+        <circle cx="24" cy="24" r="1" fill="#00ff88"/>
+      </svg>
+    </div>
+    <span class="label">Signal X<br>ECG волны</span>
+  </div>
+
+  <!-- 2: Pixel X -->
+  <div class="card">
+    <span class="num">02</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- pixel green arm ↗ -->
+        <rect x="7" y="37" width="4" height="4" rx="1" fill="#00ff88" opacity="0.5"/>
+        <rect x="12" y="32" width="4" height="4" rx="1" fill="#00ff88" opacity="0.7"/>
+        <rect x="17" y="27" width="4" height="4" rx="1" fill="#00ff88" opacity="0.9"/>
+        <rect x="27" y="17" width="4" height="4" rx="1" fill="#00ff88" opacity="0.9"/>
+        <rect x="32" y="12" width="4" height="4" rx="1" fill="#00ff88" opacity="0.7"/>
+        <rect x="37" y="7" width="4" height="4" rx="1" fill="#00ff88" opacity="0.5"/>
+        <!-- pixel cyan arm ↘ -->
+        <rect x="7" y="7" width="4" height="4" rx="1" fill="#00ccff" opacity="0.5"/>
+        <rect x="12" y="12" width="4" height="4" rx="1" fill="#00ccff" opacity="0.7"/>
+        <rect x="17" y="17" width="4" height="4" rx="1" fill="#00ccff" opacity="0.9"/>
+        <rect x="27" y="27" width="4" height="4" rx="1" fill="#00ccff" opacity="0.9"/>
+        <rect x="32" y="32" width="4" height="4" rx="1" fill="#00ccff" opacity="0.7"/>
+        <rect x="37" y="37" width="4" height="4" rx="1" fill="#00ccff" opacity="0.5"/>
+        <!-- center -->
+        <rect x="21" y="21" width="6" height="6" rx="2" fill="#00ff88"/>
+        <rect x="22.5" y="22.5" width="3" height="3" rx="1" fill="#0b1422"/>
+      </svg>
+    </div>
+    <span class="label">Pixel X<br>квадраты</span>
+  </div>
+
+  <!-- 3: Minimal X gradient -->
+  <div class="card">
+    <span class="num">03</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <defs>
+          <linearGradient id="g3a" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="#00ff88"/>
+            <stop offset="100%" stop-color="#00ff88" stop-opacity="0.3"/>
+          </linearGradient>
+          <linearGradient id="g3b" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00ccff" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="#00ccff"/>
+            <stop offset="100%" stop-color="#00ccff" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <line x1="8" y1="40" x2="40" y2="8" stroke="url(#g3a)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="8" y1="8" x2="40" y2="40" stroke="url(#g3b)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="4" fill="#0b1422"/>
+        <circle cx="24" cy="24" r="2.5" fill="#00ff88"/>
+      </svg>
+    </div>
+    <span class="label">Minimal X<br>чистый</span>
+  </div>
+
+  <!-- 4: Radar -->
+  <div class="card">
+    <span class="num">04</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <defs>
+          <radialGradient id="radar-sweep" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- circles -->
+        <circle cx="24" cy="24" r="16" fill="none" stroke="#1e2d42" stroke-width="1"/>
+        <circle cx="24" cy="24" r="10" fill="none" stroke="#1e2d42" stroke-width="1"/>
+        <circle cx="24" cy="24" r="5" fill="none" stroke="#1e2d42" stroke-width="1"/>
+        <!-- crosshair -->
+        <line x1="24" y1="8" x2="24" y2="40" stroke="#1e2d42" stroke-width="1"/>
+        <line x1="8" y1="24" x2="40" y2="24" stroke="#1e2d42" stroke-width="1"/>
+        <!-- sweep slice -->
+        <path d="M24 24 L40 24 A16 16 0 0 1 32.3 38.9 Z" fill="#00ff88" opacity="0.12"/>
+        <path d="M24 24 L40 24 A16 16 0 0 1 32.3 38.9" fill="none" stroke="#00ff88" stroke-width="1.5" opacity="0.5"/>
+        <!-- blip -->
+        <circle cx="34" cy="30" r="2" fill="#00ff88" opacity="0.9"/>
+        <circle cx="34" cy="30" r="4" fill="#00ff88" opacity="0.15"/>
+        <!-- center -->
+        <circle cx="24" cy="24" r="2" fill="#00ff88"/>
+      </svg>
+    </div>
+    <span class="label">Radar<br>развёртка</span>
+  </div>
+
+  <!-- 5: Waveform in box -->
+  <div class="card">
+    <span class="num">05</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- screen bezel -->
+        <rect x="7" y="11" width="34" height="22" rx="3" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- waveform inside screen -->
+        <path d="M10 22 L14 22 L16 16 L18 28 L20 22 L22 22 L24 18 L26 26 L28 22 L30 22 L32 19 L34 25 L36 22 L39 22"
+              stroke="#00ff88" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- baseline faint -->
+        <line x1="10" y1="22" x2="38" y2="22" stroke="#1e2d42" stroke-width="1"/>
+        <!-- stand -->
+        <line x1="24" y1="33" x2="24" y2="38" stroke="#1e2d42" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="38" x2="30" y2="38" stroke="#1e2d42" stroke-width="2" stroke-linecap="round"/>
+        <!-- accent dot -->
+        <circle cx="24" cy="22" r="1.5" fill="#00ccff"/>
+      </svg>
+    </div>
+    <span class="label">Monitor<br>экран + волна</span>
+  </div>
+
+  <!-- 6: Signal tower -->
+  <div class="card">
+    <span class="num">06</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- tower legs -->
+        <line x1="24" y1="16" x2="16" y2="38" stroke="#00ccff" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>
+        <line x1="24" y1="16" x2="32" y2="38" stroke="#00ccff" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>
+        <line x1="19" y1="28" x2="29" y2="28" stroke="#00ccff" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <line x1="17" y1="34" x2="31" y2="34" stroke="#00ccff" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+        <!-- signal arcs -->
+        <path d="M18 14 A8 8 0 0 1 30 14" fill="none" stroke="#00ff88" stroke-width="1.8" stroke-linecap="round" opacity="0.5"/>
+        <path d="M14 10 A14 14 0 0 1 34 10" fill="none" stroke="#00ff88" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>
+        <path d="M10 6.5 A19 19 0 0 1 38 6.5" fill="none" stroke="#00ff88" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- tip dot -->
+        <circle cx="24" cy="15" r="2" fill="#00ff88"/>
+        <circle cx="24" cy="15" r="4" fill="#00ff88" opacity="0.15"/>
+      </svg>
+    </div>
+    <span class="label">Broadcast<br>башня + сигнал</span>
+  </div>
+
+  <!-- 7: M letter signal -->
+  <div class="card">
+    <span class="num">07</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <defs>
+          <linearGradient id="g7" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00ff88"/>
+            <stop offset="100%" stop-color="#00ccff"/>
+          </linearGradient>
+        </defs>
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- M letter as waveform path -->
+        <path d="M10 32 L10 14 L24 26 L38 14 L38 32" stroke="url(#g7)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- underline accent -->
+        <line x1="10" y1="36" x2="38" y2="36" stroke="#1e2d42" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="10" y1="36" x2="24" y2="36" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- cursor blink -->
+        <rect x="26" y="33.5" width="2" height="5" rx="0.5" fill="#00ccff" opacity="0.9"/>
+      </svg>
+    </div>
+    <span class="label">M Terminal<br>буква + курсор</span>
+  </div>
+
+  <!-- 8: Eye / observe -->
+  <div class="card">
+    <span class="num">08</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <defs>
+          <radialGradient id="g8" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00ccff" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#00ccff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- eye shape -->
+        <path d="M8 24 Q18 12 24 12 Q30 12 40 24 Q30 36 24 36 Q18 36 8 24 Z"
+              fill="url(#g8)" stroke="#00ccff" stroke-width="1.5"/>
+        <!-- iris -->
+        <circle cx="24" cy="24" r="7" fill="none" stroke="#00ccff" stroke-width="1.2" opacity="0.5"/>
+        <circle cx="24" cy="24" r="4.5" fill="#0b1422" stroke="#00ff88" stroke-width="1.5"/>
+        <!-- pupil -->
+        <circle cx="24" cy="24" r="2" fill="#00ff88"/>
+        <!-- signal lines inside eye -->
+        <path d="M11 24 L15 24 L17 20 L19 28 L21 24 L23 24"
+              stroke="#00ccff" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+        <path d="M25 24 L27 24 L29 20 L31 28 L33 24 L37 24"
+              stroke="#00ccff" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+      </svg>
+    </div>
+    <span class="label">Eye Monitor<br>глаз + сигнал</span>
+  </div>
+
+  <!-- 9: Shield / protect -->
+  <div class="card">
+    <span class="num">09</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <defs>
+          <linearGradient id="g9" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- shield -->
+        <path d="M24 8 L38 13 L38 26 Q38 36 24 42 Q10 36 10 26 L10 13 Z"
+              fill="url(#g9)" stroke="#00ff88" stroke-width="1.5" stroke-linejoin="round"/>
+        <!-- waveform inside shield -->
+        <path d="M15 25 L18 25 L20 20 L22 30 L24 23 L26 27 L28 25 L31 25 L33 25"
+              stroke="#00ff88" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- top accent line -->
+        <line x1="17" y1="17" x2="31" y2="17" stroke="#00ccff" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+    </div>
+    <span class="label">Shield<br>защита + волна</span>
+  </div>
+
+  <!-- 10: Ring pulse -->
+  <div class="card">
+    <span class="num">10</span>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 48 48" width="48" height="48">
+        <defs>
+          <radialGradient id="g10" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="48" height="48" rx="10" fill="#0b1422"/>
+        <rect x=".75" y=".75" width="46.5" height="46.5" rx="9.5" fill="none" stroke="#1e2d42" stroke-width="1.5"/>
+        <!-- outer ring -->
+        <circle cx="24" cy="24" r="17" fill="url(#g10)" stroke="#1e2d42" stroke-width="1"/>
+        <!-- middle ring -->
+        <circle cx="24" cy="24" r="11" fill="none" stroke="#1e2d42" stroke-width="1"/>
+        <!-- active arc green -->
+        <path d="M24 7 A17 17 0 0 1 41 24" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round"/>
+        <!-- active arc cyan -->
+        <path d="M24 41 A17 17 0 0 1 7 24" fill="none" stroke="#00ccff" stroke-width="2" stroke-linecap="round"/>
+        <!-- inner pulse path -->
+        <path d="M13 24 L16 24 L18 19 L21 29 L24 22 L27 26 L30 24 L35 24"
+              stroke="#00ff88" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- center -->
+        <circle cx="24" cy="24" r="2.5" fill="#00ff88"/>
+        <circle cx="24" cy="24" r="1" fill="#0b1422"/>
+      </svg>
+    </div>
+    <span class="label">Ring Pulse<br>кольца + пульс</span>
+  </div>
+
+</div>
+</body>
+</html>

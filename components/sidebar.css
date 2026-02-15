@@ -15,22 +15,20 @@
 }
 
 .logo {
-    padding: 0 0 24px;
+    padding: 0 0 16px;
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 24px;
     width: 100%;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.logo h1 {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
+.logo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: block;
 }
 
 .nav-menu {
@@ -139,6 +137,25 @@
 .sidebar-bottom-btn--logout:hover {
     color: #ff4d4f;
     background: rgba(255, 77, 79, 0.05);
+}
+
+/* Language toggle label */
+.lang-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+#lang-toggle:hover .lang-label {
+    opacity: 1;
+}
+
+#lang-toggle.lang-en .lang-label {
+    color: var(--accent-secondary);
+    opacity: 1;
 }
 
 /* Tooltips for bottom buttons */
